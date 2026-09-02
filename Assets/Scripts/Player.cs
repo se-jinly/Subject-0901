@@ -1,5 +1,7 @@
+using System.Collections;
 using UnityEngine;
 using UnityEngine.InputSystem;
+using UnityEngine.SceneManagement;
 
 [RequireComponent(typeof(MeleeAttack))]
 [RequireComponent(typeof(CharacterController))]
@@ -54,6 +56,9 @@ public class Player : MonoBehaviour, IDamageable
     [SerializeField] private float _maxHp;
     private float _currentHp;
 
+    [SerializeField] private float _dieWait = 1.5f;
+    private bool _isDead = false;
+
 
 
     void Awake()
@@ -94,6 +99,7 @@ public class Player : MonoBehaviour, IDamageable
 
     void Update()
     {
+        if (_isDead) return;
         _input = _moveAction.ReadValue<Vector2>();
         TickTimers();
         TryMobility();
@@ -107,14 +113,29 @@ public class Player : MonoBehaviour, IDamageable
 
     public void TakeDamage(float amount, Vector3 dir)
     {
+        if (_isDead) return;
         _currentHp -= amount;
         _externalForce = dir * _knockbackPower;
         Debug.Log($"{gameObject}가, {amount}맞음, {_currentHp}남음");
         _hitFlash.Play();
-        if(_currentHp <= 0)
-        {
-            Debug.Log("죽음");
-        }
+        if (_currentHp <= 0) Die();
+    }
+
+    private void Die()
+    {
+        _isDead = true;
+        _cc.enabled = false;
+        StartCoroutine(DieRoutine());
+    }
+
+    private IEnumerator DieRoutine()
+    {
+        Time.timeScale = 0f;
+        gameObject.layer = LayerMask.NameToLayer("Default");
+        yield return new WaitForSecondsRealtime(_dieWait);
+        Time.timeScale = 1f;
+        gameObject.layer = LayerMask.NameToLayer("Player");
+        SceneManager.LoadScene(SceneManager.GetActiveScene().name);
     }
 
     private void TryAttack()

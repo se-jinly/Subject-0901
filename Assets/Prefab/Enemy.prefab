@@ -14,6 +14,7 @@ GameObject:
   - component: {fileID: 5995051531278720232}
   - component: {fileID: 340302231272956522}
   - component: {fileID: 5594876987697847162}
+  - component: {fileID: 2298314710360923371}
   m_Layer: 9
   m_Name: Enemy
   m_TagString: Untagged
@@ -129,6 +130,8 @@ MonoBehaviour:
   _detectRange: 3
   _moveSpeed: 4
   _maxHp: 100
+  _knockbackPower: 10
+  _decay: 10
 --- !u!114 &5594876987697847162
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -144,7 +147,24 @@ MonoBehaviour:
   _targetLayer:
     serializedVersion: 2
     m_Bits: 256
-  _attackRange: 2
+  _attackRange: 20
   _attackDamage: 10
   _attackCooldown: 1
   _attackOffsetRatio: 0.5
+  _shakePower: 0.1
+  _shakeDuration: 0.1
+  _hitStopDuration: 0.05
+--- !u!114 &2298314710360923371
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8052563091964302836}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e90706c272161c24bb89eb6f08398aec, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::HitFlash
+  _duration: 0.1
+  _hitColor: {r: 1, g: 0, b: 0, a: 1}

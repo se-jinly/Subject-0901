@@ -1,3 +1,4 @@
+using System.Collections;
 using UnityEngine;
 
 public class CameraFollowing : MonoBehaviour
@@ -9,12 +10,32 @@ public class CameraFollowing : MonoBehaviour
     [Header("카메라")]
     [SerializeField] private float _followingSmooth = 5f;
     [Tooltip("얼마나 떨어져 있을 지"), SerializeField] private Vector3 _offset = new(0f, 15f, -10f);
+    private Vector3 _shakeOffset;
+    private Coroutine _shakeCoroutine;
+
+    public void Shake(float power, float duration)
+    {
+        if (_shakeCoroutine != null) StopCoroutine(_shakeCoroutine);
+        _shakeCoroutine = StartCoroutine(ShakeRoutine(power, duration));
+    }
+
+    private IEnumerator ShakeRoutine(float power, float duration)
+    {
+        float elapsed = 0f;
+        while(elapsed < duration)
+        {
+            _shakeOffset = Random.insideUnitSphere * power;
+            elapsed += Time.deltaTime;
+            yield return null;
+        }
+        _shakeOffset = Vector3.zero;
+    }
 
     void LateUpdate()
     {
         if (_target == null) return;
         Vector3 targetPos = _target.position + _offset;
         Vector3 startPos = transform.position;
-        transform.position = Vector3.Lerp(startPos, targetPos, _followingSmooth * Time.deltaTime);
+        transform.position = Vector3.Lerp(startPos, targetPos, _followingSmooth * Time.deltaTime) + _shakeOffset;
     }
 }
