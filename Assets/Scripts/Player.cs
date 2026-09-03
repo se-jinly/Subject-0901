@@ -6,6 +6,7 @@ using UnityEngine.SceneManagement;
 [RequireComponent(typeof(MeleeAttack))]
 [RequireComponent(typeof(CharacterController))]
 [RequireComponent(typeof(HitFlash))]
+
 public class Player : MonoBehaviour, IDamageable
 {
     [Header("이동 및 회전")]
@@ -53,11 +54,13 @@ public class Player : MonoBehaviour, IDamageable
 
 
     [Header("체력")]
-    [SerializeField] private float _maxHp;
-    private float _currentHp;
+    [SerializeField] private int _maxHp;
+    private int _currentHp;
 
     [SerializeField] private float _dieWait = 1.5f;
     private bool _isDead = false;
+    [SerializeField] private HealthBar _healthBar;
+    private Animator _animator;
 
 
 
@@ -82,6 +85,8 @@ public class Player : MonoBehaviour, IDamageable
         _currentHp = _maxHp;
         _meleeAttack = GetComponent<MeleeAttack>();
         _hitFlash = GetComponent<HitFlash>();
+        _healthBar.SetHealth(_currentHp, _maxHp);
+        _animator = GetComponentInChildren<Animator>();
     }
 
     void OnEnable()
@@ -100,22 +105,24 @@ public class Player : MonoBehaviour, IDamageable
     void Update()
     {
         if (_isDead) return;
+        _animator.SetBool("IsGround", _cc.isGrounded);
         _input = _moveAction.ReadValue<Vector2>();
         TickTimers();
         TryMobility();
-
-        if (IsDashing) Dash();
+        _animator.SetFloat("Speed", _input.magnitude);
+        _animator.SetBool("IsDash", IsDashing);
+        if (IsDashing) { Dash(); }
         else { Rotate(); Move(); }
-
         TryAttack();
 
     }
 
-    public void TakeDamage(float amount, Vector3 dir)
+    public void TakeDamage(int amount, Vector3 dir)
     {
         if (_isDead) return;
         _currentHp -= amount;
         _externalForce = dir * _knockbackPower;
+        _healthBar.SetHealth(_currentHp, _maxHp);
         Debug.Log($"{gameObject}가, {amount}맞음, {_currentHp}남음");
         _hitFlash.Play();
         if (_currentHp <= 0) Die();
@@ -125,12 +132,13 @@ public class Player : MonoBehaviour, IDamageable
     {
         _isDead = true;
         _cc.enabled = false;
+        _animator.SetTrigger("Die");
         StartCoroutine(DieRoutine());
     }
 
     private IEnumerator DieRoutine()
     {
-        Time.timeScale = 0f;
+        //Time.timeScale = 0f;
         gameObject.layer = LayerMask.NameToLayer("Default");
         yield return new WaitForSecondsRealtime(_dieWait);
         Time.timeScale = 1f;
@@ -141,6 +149,7 @@ public class Player : MonoBehaviour, IDamageable
     private void TryAttack()
     {
         if (!_attackAction.WasPressedThisFrame()) return;
+        _animator.SetTrigger("Attack");
         _meleeAttack.Execute();
     }
 

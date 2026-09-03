@@ -12,7 +12,7 @@ public class Enemy : MonoBehaviour, IDamageable
 
 
     [Header("체력")]
-    [SerializeField] private float _maxHp = 10f;
+    [SerializeField] private int _maxHp = 10;
     private float _currentHp;
 
     private HitFlash _hitFlash;
@@ -22,23 +22,28 @@ public class Enemy : MonoBehaviour, IDamageable
     [SerializeField] private float _knockbackPower = 10f;
     [Tooltip("미끄러짐"), SerializeField] private float _decay = 10f;
 
+    private Animator _animator;
+
 
     private void Awake()
     {
         _meleeAttack = GetComponent<MeleeAttack>();
         _currentHp = _maxHp;
         _hitFlash = GetComponent<HitFlash>();
+        _animator = GetComponentInChildren<Animator>();
     }
 
     private void Update()
     {
         TryAttack();
+        _animator.SetFloat("Speed", _moveSpeed);
         Chase();
     }
 
     private void TryAttack()
     {
         if (Vector3.Distance(transform.position, _player.position) > _detectRange) return;
+        _animator.SetTrigger("Attack");
         _meleeAttack.Execute();
     }
     private void Chase()
@@ -58,7 +63,7 @@ public class Enemy : MonoBehaviour, IDamageable
     public void SetTarget(Transform target) => _player = target;
 
 
-    public void TakeDamage(float amount, Vector3 dir)
+    public void TakeDamage(int amount, Vector3 dir)
     {
         _currentHp -= amount;
         _externalForce = dir * _knockbackPower;
@@ -68,3 +73,4 @@ public class Enemy : MonoBehaviour, IDamageable
     }
 
 }
+//몬스터들이 내 방향을 보고 때리지 않음.

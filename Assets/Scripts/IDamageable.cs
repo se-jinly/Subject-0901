@@ -1,5 +1,5 @@
 using UnityEngine;
 public interface IDamageable
 {
-    void TakeDamage(float amount, Vector3 knockbackDir);
+    void TakeDamage(int amount, Vector3 knockbackDir);
 }

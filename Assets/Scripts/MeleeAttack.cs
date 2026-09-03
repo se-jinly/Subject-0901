@@ -6,7 +6,7 @@ public class MeleeAttack : MonoBehaviour
     [Header("공격")]
     [SerializeField] private LayerMask _targetLayer;
     [SerializeField] private float _attackRange = 2f;
-    [SerializeField] private float _attackDamage = 10f;
+    [SerializeField] private int _attackDamage = 10;
     [SerializeField] private float _attackCooldown = 0.3f;
     [SerializeField] private float _attackOffsetRatio = 0.5f;
     [SerializeField] private float _shakePower = 0.1f;
