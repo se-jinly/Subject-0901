@@ -6,6 +6,7 @@ using UnityEngine.SceneManagement;
 [RequireComponent(typeof(MeleeAttack))]
 [RequireComponent(typeof(CharacterController))]
 [RequireComponent(typeof(HitFlash))]
+[RequireComponent(typeof(RangedAttack))]
 
 public class Player : MonoBehaviour, IDamageable
 {
@@ -43,7 +44,9 @@ public class Player : MonoBehaviour, IDamageable
 
 
     private MeleeAttack _meleeAttack;
+    private RangedAttack _rangedAttack;
     private InputAction _attackAction;
+    private InputAction _rangedAttackAction;
     private HitFlash _hitFlash;
 
 
@@ -64,6 +67,8 @@ public class Player : MonoBehaviour, IDamageable
 
 
 
+
+
     void Awake()
     {
         _cam = Camera.main;
@@ -81,12 +86,14 @@ public class Player : MonoBehaviour, IDamageable
         _dashAction = InputSystem.actions.FindAction("Sprint");
         _moveAction = InputSystem.actions.FindAction("Move");
         _attackAction = InputSystem.actions.FindAction("Attack");
+        _rangedAttackAction = InputSystem.actions.FindAction("RangedAttack");
 
         _currentHp = _maxHp;
         _meleeAttack = GetComponent<MeleeAttack>();
         _hitFlash = GetComponent<HitFlash>();
         _healthBar.SetHealth(_currentHp, _maxHp);
         _animator = GetComponentInChildren<Animator>();
+        _rangedAttack = GetComponent<RangedAttack>();
     }
 
     void OnEnable()
@@ -94,12 +101,14 @@ public class Player : MonoBehaviour, IDamageable
         _dashAction.Enable();
         _moveAction.Enable();
         _attackAction.Enable();
+        _rangedAttackAction.Enable();
     }
     void OnDisable()
     {
         _dashAction.Disable();
         _moveAction.Disable();
         _attackAction.Disable();
+        _rangedAttackAction.Disable();
     }
 
     void Update()
@@ -114,7 +123,7 @@ public class Player : MonoBehaviour, IDamageable
         if (IsDashing) { Dash(); }
         else { Rotate(); Move(); }
         TryAttack();
-
+        TryRangedAttack();
     }
 
     public void TakeDamage(int amount, Vector3 dir)
@@ -126,6 +135,12 @@ public class Player : MonoBehaviour, IDamageable
         Debug.Log($"{gameObject}가, {amount}맞음, {_currentHp}남음");
         _hitFlash.Play();
         if (_currentHp <= 0) Die();
+    }
+
+    private void TryRangedAttack()
+    {
+        if (!_rangedAttackAction.WasPressedThisFrame()) return;
+        _rangedAttack.Execute();
     }
 
     private void Die()
@@ -237,6 +252,5 @@ public class Player : MonoBehaviour, IDamageable
         _cc.Move(move * Time.deltaTime);
         _externalForce = Vector3.Lerp(_externalForce, Vector3.zero, _decay * Time.deltaTime);
     }
-    // 앵간해서 move를 더 할게 있나? 이속 버프, 감소, 정지, 불규칙이동? 그게 다인가?
-    // 밀쳐지기, 공격하면서 이동?
+    // 앵간해서 move를 더 할게 있나? 이속 버프, 감소, 정지, 공격하면서 이동?
 }
