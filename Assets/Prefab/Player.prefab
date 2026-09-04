@@ -14,6 +14,9 @@ GameObject:
   - component: {fileID: 2894207167633636674}
   - component: {fileID: 1592191582046931705}
   - component: {fileID: 2613998488536558369}
+  - component: {fileID: 6351647548090920082}
+  - component: {fileID: 7508432326092174595}
+  - component: {fileID: 6024616223342826572}
   m_Layer: 8
   m_Name: Player
   m_TagString: Player
@@ -162,12 +165,67 @@ MonoBehaviour:
   _dashCooldown: 1
   _isInCombat: 0
   _jumpSpeed: 6
-  _enemyLayer:
+  _knockbackPower: 10
+  _decay: 10
+  _maxHp: 0
+  _dieWait: 1.5
+  _healthBar: {fileID: 0}
+--- !u!114 &6351647548090920082
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3069181121838950177}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 9d0aadab72aebcd47ab63bc3de39a91e, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::MeleeAttack
+  _targetLayer:
     serializedVersion: 2
     m_Bits: 0
   _attackRange: 2
   _attackDamage: 10
   _attackCooldown: 0.3
+  _attackOffsetRatio: 0.5
+  _shakePower: 0.1
+  _shakeDuration: 0.1
+  _hitStopDuration: 0.04
+--- !u!114 &7508432326092174595
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3069181121838950177}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e90706c272161c24bb89eb6f08398aec, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::HitFlash
+  _duration: 0.1
+  _hitColor: {r: 1, g: 0, b: 0, a: 1}
+--- !u!114 &6024616223342826572
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3069181121838950177}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ecff93937831d5d478258234d8095286, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::RangedAttack
+  _projectilePrefab: {fileID: -3693037148923187780, guid: 55a863b5f38760d4a9ad955c54102246, type: 3}
+  _targetLayer:
+    serializedVersion: 2
+    m_Bits: 512
+  _attackDamage: 8
+  _attackCoolDown: 0.5
+  _spawnOffset: 1
+  _spawnHeight: 1
 --- !u!1 &5342684307487493421
 GameObject:
   m_ObjectHideFlags: 0

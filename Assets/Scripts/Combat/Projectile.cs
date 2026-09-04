@@ -21,8 +21,6 @@ public class Projectile : MonoBehaviour
 
     private void OnTriggerEnter(Collider other)
     {
-        Debug.Log($"{other.name} / layer {other.gameObject.layer}");
-        if ((_targetLayer.value & (1 << other.gameObject.layer)) == 0) return;
         // 여기 비트연산이 레이어는 int형으로 각 자리수를 저장하기 때문에 숫자비교가 아니라
         // 어느 자리에 위치해있냐가 정확히 구분 됨.
         if (other.TryGetComponent<IDamageable>(out IDamageable target))
@@ -35,3 +33,4 @@ public class Projectile : MonoBehaviour
     }
 
 }
+
