@@ -26,6 +26,8 @@ public class WaveManager : MonoBehaviour
     [SerializeField] private TextMeshProUGUI _waveText;
     [SerializeField] private GameObject _clearObject;
     private int _currentWave;
+    [SerializeField] private RewardManager _rewardManager;
+    [SerializeField] private Player _player;
     void Start()
     {
         StartCoroutine(WaveRoutine());
@@ -44,8 +46,13 @@ public class WaveManager : MonoBehaviour
                 _enemies.RemoveAll(e => e == null);
                 return _enemies.Count == 0;
             });
+            if (i + 1 < _waves.Length)
+            {
+                yield return StartCoroutine(_rewardManager.ShowAndWait());
+            }
         }
         _clearObject.SetActive(true);
+        _player.InputLocked = true;
     }
     private void SpawnWave(Wave wave)
     {

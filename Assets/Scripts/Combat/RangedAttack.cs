@@ -26,6 +26,9 @@ public class RangedAttack : MonoBehaviour
         projectile.Setup(_attackDamage, _targetLayer);
     }
 
+    public void AddDamage(float amount) => _attackDamage += Mathf.RoundToInt(amount);
+
+
     private void TickTime()
     {
         _attackCoolDownLeft = Mathf.Max(0f, _attackCoolDownLeft - Time.deltaTime);

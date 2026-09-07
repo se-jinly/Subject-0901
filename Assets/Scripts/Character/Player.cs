@@ -38,17 +38,6 @@ public class Player : MonoBehaviour, IDamageable
     [SerializeField] private bool _isInCombat;
     [SerializeField] private float _jumpSpeed = 6f;
 
-    private Vector3 _camForward;
-    private Vector3 _camRight;
-
-
-
-    private MeleeAttack _meleeAttack;
-    private RangedAttack _rangedAttack;
-    private InputAction _attackAction;
-    private InputAction _rangedAttackAction;
-    private HitFlash _hitFlash;
-
 
     [Header("넉백")]
     private Vector3 _externalForce;
@@ -63,9 +52,21 @@ public class Player : MonoBehaviour, IDamageable
     [SerializeField] private float _dieWait = 1.5f;
     private bool _isDead = false;
     [SerializeField] private HealthBar _healthBar;
+
+
+    private Vector3 _camForward;
+    private Vector3 _camRight;
+
+
+
+    private MeleeAttack _meleeAttack;
+    private RangedAttack _rangedAttack;
+    private InputAction _attackAction;
+    private InputAction _rangedAttackAction;
+    private HitFlash _hitFlash;
     private Animator _animator;
 
-
+    public bool InputLocked { get; set; }
 
 
 
@@ -113,6 +114,7 @@ public class Player : MonoBehaviour, IDamageable
 
     void Update()
     {
+        if (InputLocked) return;
         if (_isDead) return;
         _animator.SetBool("IsGround", _cc.isGrounded);
         _input = _moveAction.ReadValue<Vector2>();
@@ -125,6 +127,29 @@ public class Player : MonoBehaviour, IDamageable
         TryAttack();
         TryRangedAttack();
     }
+
+    public void AddMaxHealth(float amount)
+    {
+        int value = Mathf.RoundToInt(amount);
+        _maxHp += value;
+        _currentHp += value;
+        _healthBar.SetHealth(_currentHp, _maxHp);
+    }
+    public void Heal(float amount)
+    {
+        int value = Mathf.RoundToInt(amount);
+        _currentHp = Mathf.Min(_currentHp + value, _maxHp);
+        _healthBar.SetHealth(_currentHp, _maxHp);
+    }
+    public void AddMoveSpeed(float amount) => _moveSpeed += amount;
+    public void AddAttackDamage(float amount)
+    {
+        // public void AddDamage(float amount) => _attackDamage += Mathf.RoundToInt(amount);
+        _meleeAttack.AddDamage(amount);
+        _rangedAttack.AddDamage(amount);
+    }
+    public void MultiplyDashCooldown(float multiplier)
+        => _dashCooldown = Mathf.Max(0.2f, _dashCooldown * multiplier);
 
     public void TakeDamage(int amount, Vector3 dir)
     {

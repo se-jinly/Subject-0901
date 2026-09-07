@@ -33,6 +33,7 @@ public class MeleeAttack : MonoBehaviour
         }
         _hitFeedback.Play(hitCount);
     }
+    public void AddDamage(float amount) => _attackDamage += Mathf.RoundToInt(amount);
 
     private void TickTime()
     {
