@@ -4,6 +4,7 @@ using UnityEngine.AI;
 [RequireComponent(typeof(HitFlash))]
 [RequireComponent(typeof(NavMeshAgent))]
 [RequireComponent(typeof(Rigidbody))]
+[RequireComponent(typeof(AudioSource))]
 public abstract class Enemy : MonoBehaviour, IDamageable
 {
     //상속하는 것이라는 것 말곤 abstract가 제한되는 건 뭐임? 뭔가 구현하면 안 된다거나 그런거
@@ -31,6 +32,10 @@ public abstract class Enemy : MonoBehaviour, IDamageable
     [SerializeField] private float _knockbackPower = 10f;
     [Tooltip("미끄러짐"), SerializeField] private float _decay = 10f;
 
+    [Header("오디오")]
+    [SerializeField] private AudioClip _dieClip;
+
+
 
     protected virtual void Awake()
     {
@@ -39,6 +44,7 @@ public abstract class Enemy : MonoBehaviour, IDamageable
         _animator = GetComponentInChildren<Animator>();
         _agent = GetComponent<NavMeshAgent>();
         _agent.speed = _moveSpeed;
+
     }
 
     private void Update()
@@ -66,7 +72,11 @@ public abstract class Enemy : MonoBehaviour, IDamageable
         _currentHp -= amount;
         _externalForce = dir * _knockbackPower;
         Debug.Log($"{name}, HP: {_currentHp}");
-        if (_currentHp <= 0) Destroy(gameObject);
+        if (_currentHp <= 0)
+        {
+            AudioSource.PlayClipAtPoint(_dieClip, Camera.main.transform.position);
+            Destroy(gameObject);
+        }
         _hitFlash.Play();
     }
 

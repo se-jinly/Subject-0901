@@ -28,6 +28,9 @@ public class WaveManager : MonoBehaviour
     private int _currentWave;
     [SerializeField] private RewardManager _rewardManager;
     [SerializeField] private Player _player;
+
+    private float _startTime;
+    private int _killCount;
     void Start()
     {
         StartCoroutine(WaveRoutine());

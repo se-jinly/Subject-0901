@@ -1,5 +1,6 @@
 using UnityEngine;
 
+[RequireComponent(typeof(AudioSource))]
 public class MeleeAttack : MonoBehaviour
 {
     [Header("공격")]
@@ -10,6 +11,15 @@ public class MeleeAttack : MonoBehaviour
     [SerializeField] private float _attackOffsetRatio = 0.5f;
     private float _attackCooldownLeft;
     [SerializeField] private HitFeedback _hitFeedback = new();
+
+    [Header("사운드")]
+    [SerializeField] private AudioClip _hitClip;
+    private AudioSource _audioSource;
+
+    private void Awake()
+    {
+        _audioSource = GetComponent<AudioSource>();
+    }
 
     void Update()
     {
@@ -32,6 +42,7 @@ public class MeleeAttack : MonoBehaviour
             }
         }
         _hitFeedback.Play(hitCount);
+        _audioSource.PlayOneShot(_hitClip);
     }
     public void AddDamage(float amount) => _attackDamage += Mathf.RoundToInt(amount);
 

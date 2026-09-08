@@ -2,11 +2,11 @@ using System.Collections;
 using UnityEngine;
 using UnityEngine.InputSystem;
 using UnityEngine.SceneManagement;
-
 [RequireComponent(typeof(MeleeAttack))]
 [RequireComponent(typeof(CharacterController))]
 [RequireComponent(typeof(HitFlash))]
 [RequireComponent(typeof(RangedAttack))]
+[RequireComponent(typeof(AudioSource))]
 
 public class Player : MonoBehaviour, IDamageable
 {
@@ -68,6 +68,11 @@ public class Player : MonoBehaviour, IDamageable
 
     public bool InputLocked { get; set; }
 
+    [Header("오디오")]
+    [SerializeField] private AudioClip _dashCilp;
+    [SerializeField] private AudioClip _dieCilp;
+    private AudioSource _audioSource;
+
 
 
     void Awake()
@@ -95,6 +100,8 @@ public class Player : MonoBehaviour, IDamageable
         _healthBar.SetHealth(_currentHp, _maxHp);
         _animator = GetComponentInChildren<Animator>();
         _rangedAttack = GetComponent<RangedAttack>();
+
+        _audioSource = GetComponent<AudioSource>();
     }
 
     void OnEnable()
@@ -144,7 +151,6 @@ public class Player : MonoBehaviour, IDamageable
     public void AddMoveSpeed(float amount) => _moveSpeed += amount;
     public void AddAttackDamage(float amount)
     {
-        // public void AddDamage(float amount) => _attackDamage += Mathf.RoundToInt(amount);
         _meleeAttack.AddDamage(amount);
         _rangedAttack.AddDamage(amount);
     }
@@ -170,6 +176,7 @@ public class Player : MonoBehaviour, IDamageable
 
     private void Die()
     {
+        _audioSource.PlayOneShot(_dieCilp);
         _isDead = true;
         _cc.enabled = false;
         _animator.SetTrigger("Die");
@@ -222,6 +229,7 @@ public class Player : MonoBehaviour, IDamageable
     {
         if(!IsDashing && _cooldownLeft <= 0)
         {
+            _audioSource.PlayOneShot(_dashCilp);
             // _input의 값이 뭐라도 들어있으면 0이 아님
             if (_input.sqrMagnitude > MinAimDistanceSqr)
             {

@@ -9,7 +9,7 @@ public class HealthBar : MonoBehaviour
     private List<Heart> _hearts = new();
     public void SetHealth(int current, int max)
     {
-        int needed = max / _heartCapacity;
+        int needed = Mathf.CeilToInt((float)max / _heartCapacity);
         // hp멕스 예 12 라면 칸당 최대치가 2니까 6개가 필요함
         while(_hearts.Count < needed)
         {
