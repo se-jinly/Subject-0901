@@ -18,7 +18,7 @@ public class WaveManager : MonoBehaviour
     [SerializeField] private RangedEnemy _rangedPrefab;
     [SerializeField] private Wave[] _waves;
     // 웨이브 정보만 있음 아마 숫자 많아야 십수개가 전부임
-    [SerializeField] private float _waveInterval = 3f;
+    [SerializeField] private float _waveInterval = 0.8f;
     // 간격
     private List<Enemy> _enemies = new();
 
@@ -28,11 +28,13 @@ public class WaveManager : MonoBehaviour
     private int _currentWave;
     [SerializeField] private RewardManager _rewardManager;
     [SerializeField] private Player _player;
+    [SerializeField] private TextMeshProUGUI _resultText;
 
     private float _startTime;
     private int _killCount;
     void Start()
     {
+        _startTime = Time.time;
         StartCoroutine(WaveRoutine());
     }
     private IEnumerator WaveRoutine()
@@ -55,6 +57,11 @@ public class WaveManager : MonoBehaviour
             }
         }
         _clearObject.SetActive(true);
+        float elapsed = Time.time - _startTime;
+        int minutes = (int)(elapsed / 60);
+        int secends = (int)(elapsed % 60);
+        _resultText.text = $"경과 시간: {minutes:00}:{secends:00}\n 처치 수: {_killCount}";
+        // text받아서 넣어야함.
         _player.InputLocked = true;
     }
     private void SpawnWave(Wave wave)
@@ -63,11 +70,13 @@ public class WaveManager : MonoBehaviour
         {
             Enemy enemy = _enemySpawner.Spawn(_meleePrefab);
             if (enemy != null) _enemies.Add(enemy);
+            _killCount++;
         }
         for (int i = 0; i < wave.rangedCount; i++)
         {
             Enemy enemy = _enemySpawner.Spawn(_rangedPrefab);
             if (enemy != null) _enemies.Add(enemy);
+            _killCount++;
         }
     }
 
