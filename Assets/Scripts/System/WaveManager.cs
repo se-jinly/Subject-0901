@@ -8,6 +8,7 @@ public class Wave
 {
     public int meleeCount;
     public int rangedCount;
+    public bool hasBoss;
 }
 // 이게 시러이라이저블이기 때문에 아마 안에 속한 모든게 정할 수 있을 것.
 public class WaveManager : MonoBehaviour
@@ -16,6 +17,7 @@ public class WaveManager : MonoBehaviour
     [SerializeField] private EnemySpawner _enemySpawner;
     [SerializeField] private MeleeEnemy _meleePrefab;
     [SerializeField] private RangedEnemy _rangedPrefab;
+    [SerializeField] private BossEnemy _bossPrefab;
     [SerializeField] private Wave[] _waves;
     // 웨이브 정보만 있음 아마 숫자 많아야 십수개가 전부임
     [SerializeField] private float _waveInterval = 0.8f;
@@ -66,16 +68,16 @@ public class WaveManager : MonoBehaviour
     }
     private void SpawnWave(Wave wave)
     {
-        for (int i = 0; i < wave.meleeCount; i++)
+        for (int i = 0; i < wave.meleeCount; i++) SpawnEnemy(_meleePrefab);
+        for (int i = 0; i < wave.rangedCount; i++) SpawnEnemy(_rangedPrefab);
+        if (wave.hasBoss) SpawnEnemy(_bossPrefab);
+    }
+    private void SpawnEnemy(Enemy enemyPrefab)
+    {
+        Enemy enemy = _enemySpawner.Spawn(enemyPrefab);
+        if (enemy != null)
         {
-            Enemy enemy = _enemySpawner.Spawn(_meleePrefab);
-            if (enemy != null) _enemies.Add(enemy);
-            _killCount++;
-        }
-        for (int i = 0; i < wave.rangedCount; i++)
-        {
-            Enemy enemy = _enemySpawner.Spawn(_rangedPrefab);
-            if (enemy != null) _enemies.Add(enemy);
+            _enemies.Add(enemy);
             _killCount++;
         }
     }

@@ -489,7 +489,7 @@ GameObject:
   - component: {fileID: 278962127}
   - component: {fileID: 278962126}
   - component: {fileID: 278962125}
-  m_Layer: 0
+  m_Layer: 11
   m_Name: Wall (2)
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -601,7 +601,7 @@ GameObject:
   - component: {fileID: 308392665}
   - component: {fileID: 308392664}
   - component: {fileID: 308392663}
-  m_Layer: 0
+  m_Layer: 11
   m_Name: Wall (3)
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -1098,7 +1098,7 @@ GameObject:
   - component: {fileID: 485719087}
   - component: {fileID: 485719086}
   - component: {fileID: 485719085}
-  m_Layer: 0
+  m_Layer: 11
   m_Name: Cube (2)
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -1192,8 +1192,8 @@ Transform:
   m_GameObject: {fileID: 485719084}
   serializedVersion: 2
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: -3.9348497, y: 0.5, z: -8.53668}
-  m_LocalScale: {x: 3, y: 1, z: 2}
+  m_LocalPosition: {x: -3.9348497, y: 1, z: -8.53668}
+  m_LocalScale: {x: 3, y: 2, z: 2}
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 1063460235}
@@ -1431,7 +1431,7 @@ GameObject:
   - component: {fileID: 1005705544}
   - component: {fileID: 1005705543}
   - component: {fileID: 1005705542}
-  m_Layer: 0
+  m_Layer: 11
   m_Name: Cube (1)
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -1525,8 +1525,8 @@ Transform:
   m_GameObject: {fileID: 1005705541}
   serializedVersion: 2
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: -16.934849, y: 0.5, z: -11.53668}
-  m_LocalScale: {x: 3, y: 1, z: 2}
+  m_LocalPosition: {x: -16.934849, y: 1, z: -11.53668}
+  m_LocalScale: {x: 3, y: 2, z: 2}
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 1063460235}
@@ -1815,7 +1815,7 @@ GameObject:
   m_Component:
   - component: {fileID: 1063460235}
   - component: {fileID: 1063460236}
-  m_Layer: 0
+  m_Layer: 11
   m_Name: Village_01
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -2396,7 +2396,7 @@ GameObject:
   - component: {fileID: 1209316120}
   - component: {fileID: 1209316119}
   - component: {fileID: 1209316118}
-  m_Layer: 0
+  m_Layer: 11
   m_Name: Cube
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -2490,8 +2490,8 @@ Transform:
   m_GameObject: {fileID: 1209316117}
   serializedVersion: 2
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: -10.93485, y: 0.5, z: 0.46331978}
-  m_LocalScale: {x: 3, y: 1, z: 2}
+  m_LocalPosition: {x: -10.93485, y: 1, z: 0.46331978}
+  m_LocalScale: {x: 3, y: 2, z: 2}
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 1063460235}
@@ -2508,7 +2508,7 @@ GameObject:
   - component: {fileID: 1284215864}
   - component: {fileID: 1284215863}
   - component: {fileID: 1284215862}
-  m_Layer: 0
+  m_Layer: 11
   m_Name: Wall (1)
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -2908,11 +2908,11 @@ Transform:
   m_GameObject: {fileID: 1530737883}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 1066.8679, y: 0.00002, z: 2620.6707}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
-  m_Father: {fileID: 0}
+  m_Father: {fileID: 2070222041}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &1579665726
 GameObject:
@@ -3407,7 +3407,7 @@ GameObject:
   - component: {fileID: 1661932810}
   - component: {fileID: 1661932809}
   - component: {fileID: 1661932808}
-  m_Layer: 0
+  m_Layer: 11
   m_Name: Wall
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -4374,13 +4374,17 @@ MonoBehaviour:
   _enemySpawner: {fileID: 368287486}
   _meleePrefab: {fileID: 5922298977348393241, guid: 1ee191ae8edddd6458c4b9ef4186dcec, type: 3}
   _rangedPrefab: {fileID: 2247987598496169141, guid: 5e773842417559a41ae2da158736e762, type: 3}
+  _bossPrefab: {fileID: 5402778667621759569, guid: f4dd27cea11816e479ec107c6984c523, type: 3}
   _waves:
-  - meleeCount: 3
+  - meleeCount: 0
     rangedCount: 1
-  - meleeCount: 1
+    hasBoss: 1
+  - meleeCount: 0
     rangedCount: 3
-  - meleeCount: 2
+    hasBoss: 0
+  - meleeCount: 0
     rangedCount: 2
+    hasBoss: 0
   _waveInterval: 0.8
   _waveText: {fileID: 2127892529}
   _clearObject: {fileID: 191621262}
@@ -4396,11 +4400,11 @@ Transform:
   m_GameObject: {fileID: 2022419288}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: -11.5, y: 2.0869, z: -10.17893}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
-  m_Father: {fileID: 0}
+  m_Father: {fileID: 2070222041}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &2054671072
 GameObject:
@@ -4539,6 +4543,39 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 2054671072}
   m_CullTransparentMesh: 1
+--- !u!1 &2070222040
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 2070222041}
+  m_Layer: 0
+  m_Name: --- Manager ---
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &2070222041
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2070222040}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children:
+  - {fileID: 2022419290}
+  - {fileID: 1530737885}
+  m_Father: {fileID: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &2087189682
 GameObject:
   m_ObjectHideFlags: 0
@@ -4551,7 +4588,7 @@ GameObject:
   - component: {fileID: 2087189685}
   - component: {fileID: 2087189684}
   - component: {fileID: 2087189683}
-  m_Layer: 0
+  m_Layer: 11
   m_Name: Floor
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -4801,8 +4838,7 @@ SceneRoots:
   - {fileID: 1129165463}
   - {fileID: 1063460235}
   - {fileID: 1879819594}
-  - {fileID: 2022419290}
   - {fileID: 1708487439}
-  - {fileID: 1530737885}
   - {fileID: 1337553135}
   - {fileID: 639737780}
+  - {fileID: 2070222041}

@@ -1,5 +1,5 @@
 using UnityEngine;
-
+// 보상 타입을 위한 클래스로 
 public enum RewardType
 {
     MaxHealth,
