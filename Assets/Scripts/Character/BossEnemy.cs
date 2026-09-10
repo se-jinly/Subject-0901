@@ -6,7 +6,6 @@ public class BossEnemy : Enemy
 {
     [Header("패턴")]
     [SerializeField] private float _recoveryTime = 0.8f;
-    [Tooltip("공격 모션 시간"), SerializeField] private float _windupTime = 0.5f;
     [SerializeField] private float _patternInterval = 1.5f;
     private float _patternTimer;
     private bool IsMeleeAttack => _patternTimer > 0f;
@@ -18,10 +17,12 @@ public class BossEnemy : Enemy
     [SerializeField] private float _dashDuration = 0.7f;
     [SerializeField] private int _dashDamage = 4;
     [SerializeField] private float _dashRange = 2f;
+    [Tooltip("공격 모션 시간"), SerializeField] private float _dashWindupTime = 0.5f;
 
     [Header("범위공격")]
     [SerializeField] private float _slamRange = 6f;
     [SerializeField] private int _slamDamage = 6;
+    [Tooltip("공격 모션 시간"), SerializeField] private float _slamWindupTime = 0.5f;
 
 
 
@@ -32,6 +33,16 @@ public class BossEnemy : Enemy
         base.Awake();
         _patternTimer = _patternInterval;
         _meleeAttack = GetComponent<MeleeAttack>();
+
+        BossHealthBar.Instance.SetHealth(_currentHp, _maxHp);
+        BossHealthBar.Instance.Show();
+    }
+
+    public override void TakeDamage(int amount, Vector3 dir)
+    {
+        base.TakeDamage(amount, dir);
+        BossHealthBar.Instance.SetHealth(_currentHp, _maxHp);
+        if (_currentHp <= 0) BossHealthBar.Instance.Hide();
     }
     protected override void TryAttack()
     {
@@ -50,14 +61,15 @@ public class BossEnemy : Enemy
     private IEnumerator PatternRoutine()
     {
         //_animator.SetTrigger(""); 아직 없음.
-        yield return new WaitForSeconds(_windupTime);
 
         int randomPattern = Random.Range(0, 2);
         if(randomPattern == 0)
         {
+            yield return new WaitForSeconds(_dashWindupTime);
             yield return StartCoroutine(DashRoutine());
         } else
         {
+            yield return new WaitForSeconds(_slamWindupTime);
             yield return StartCoroutine(SlamRoutine());
         }
         yield return new WaitForSeconds(_recoveryTime);

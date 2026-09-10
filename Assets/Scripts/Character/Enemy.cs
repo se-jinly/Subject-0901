@@ -23,8 +23,8 @@ public abstract class Enemy : MonoBehaviour, IDamageable
 
 
     [Header("체력")]
-    [SerializeField] private int _maxHp = 10;
-    private float _currentHp;
+    [SerializeField] protected int _maxHp = 10;
+    protected float _currentHp;
 
 
     [Header("넉백")]
@@ -67,7 +67,7 @@ public abstract class Enemy : MonoBehaviour, IDamageable
     protected abstract void Chase();
     public void SetTarget(Transform target) => _player = target;
 
-    public void TakeDamage(int amount, Vector3 dir)
+    public virtual void TakeDamage(int amount, Vector3 dir)
     {
         _currentHp -= amount;
         _externalForce = dir * _knockbackPower;

@@ -1,7 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-using static UnityEditor.Progress;
 
 public class RewardManager : MonoBehaviour
 {
@@ -24,7 +23,6 @@ public class RewardManager : MonoBehaviour
             _cards[i].Button.onClick.AddListener(() => OnSelect(index));
             // 이건 뭘까?
         }
-        _rewardDeck.AddRange(_pool);
     }
     // 보상을 후보자 안에 넣고 그 보상을 카드에 넣어서 UI에 띄움
     public IEnumerator ShowAndWait()
@@ -86,10 +84,14 @@ public class RewardManager : MonoBehaviour
     private void PickCandidates(int count)
     {
         _candidates.Clear();
+        _rewardDeck.Clear();
+        _rewardDeck.AddRange(_pool);
         for (int i = 0; i < count; i++)
         {
+            if (_rewardDeck.Count == 0) break;
             int randomCard = Random.Range(0, _rewardDeck.Count);
             _candidates.Add(_rewardDeck[randomCard]);
+            _rewardDeck.RemoveAt(randomCard);
         }
     }
 }

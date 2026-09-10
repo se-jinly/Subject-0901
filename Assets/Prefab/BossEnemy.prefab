@@ -419,11 +419,16 @@ MonoBehaviour:
   _knockbackPower: 10
   _decay: 10
   _dieClip: {fileID: 8300000, guid: b21cf6f581b114249934ab9233834ff4, type: 3}
+  _recoveryTime: 0.8
   _patternInterval: 1.5
-  _windupTime: 0.5
   _dashSpeed: 12
   _dashDuration: 0.7
-  _recoveryTime: 0.8
+  _dashDamage: 4
+  _dashRange: 3
+  _dashWindupTime: 0.3
+  _slamRange: 6
+  _slamDamage: 8
+  _slamWindupTime: 1
 --- !u!1 &1031092735581688445
 GameObject:
   m_ObjectHideFlags: 0
