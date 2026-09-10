@@ -499,8 +499,8 @@ MonoBehaviour:
   _targetLayer:
     serializedVersion: 2
     m_Bits: 256
-  _attackRange: 2
-  _attackDamage: 1
+  _attackRange: 1.5
+  _attackDamage: 2
   _attackCooldown: 0.3
   _attackOffsetRatio: 0.5
   _hitFeedback:

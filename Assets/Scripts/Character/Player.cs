@@ -255,7 +255,9 @@ public class Player : MonoBehaviour, IDamageable
     {
         _groundPlane = new(Vector3.up, transform.position + Vector3.up * _aimPlaneHeight);
         Vector2 mouseScreenPos = Mouse.current.position.ReadValue();
-        Ray ray = _cam.ScreenPointToRay(mouseScreenPos);
+        mouseScreenPos.x /= Screen.width;
+        mouseScreenPos.y /= Screen.height;
+        Ray ray = _cam.ViewportPointToRay(mouseScreenPos);
         if (_groundPlane.Raycast(ray, out float dist))
         {
             Vector3 hitPoint = ray.GetPoint(dist);

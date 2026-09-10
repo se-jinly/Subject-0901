@@ -6916,7 +6916,7 @@ MonoBehaviour:
     serializedVersion: 2
     m_Bits: 512
   _attackRange: 2
-  _attackDamage: 1
+  _attackDamage: 2
   _attackCooldown: 0.3
   _attackOffsetRatio: 0.5
   _hitFeedback:
