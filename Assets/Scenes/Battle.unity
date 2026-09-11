@@ -961,6 +961,18 @@ PrefabInstance:
       value: 2
       objectReference: {fileID: 0}
     - target: {fileID: 7634459453689375871, guid: b7473f654e67c484291ceb674de71408, type: 3}
+      propertyPath: orthographic
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 7634459453689375871, guid: b7473f654e67c484291ceb674de71408, type: 3}
+      propertyPath: field of view
+      value: 60
+      objectReference: {fileID: 0}
+    - target: {fileID: 7634459453689375871, guid: b7473f654e67c484291ceb674de71408, type: 3}
+      propertyPath: m_FOVAxisMode
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 7634459453689375871, guid: b7473f654e67c484291ceb674de71408, type: 3}
       propertyPath: m_TargetTexture
       value: 
       objectReference: {fileID: 8400000, guid: 756ccbb448b97a7418e14efbea24062f, type: 2}
@@ -1581,6 +1593,10 @@ PrefabInstance:
       propertyPath: _healthBar
       value: 
       objectReference: {fileID: 1666762089}
+    - target: {fileID: 2613998488536558369, guid: e92a9434e6ee876458fed4690f73ef9f, type: 3}
+      propertyPath: _isInCombat
+      value: 1
+      objectReference: {fileID: 0}
     - target: {fileID: 3069181121838950177, guid: e92a9434e6ee876458fed4690f73ef9f, type: 3}
       propertyPath: m_Name
       value: Player
@@ -5021,7 +5037,7 @@ MeshRenderer:
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
-  - {fileID: 2100000, guid: dfe3de840dabc5549aa8ee05cb6cef9e, type: 2}
+  - {fileID: 2100000, guid: 7796691176607554891db07aa7653405, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
