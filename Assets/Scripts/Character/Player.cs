@@ -171,6 +171,7 @@ public class Player : MonoBehaviour, IDamageable
     private void TryRangedAttack()
     {
         if (!_rangedAttackAction.WasPressedThisFrame()) return;
+        _animator.SetTrigger("Throw");
         _rangedAttack.Execute();
     }
 
