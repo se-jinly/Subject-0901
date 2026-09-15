@@ -941,6 +941,10 @@ PrefabInstance:
       value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 5719459458439634429, guid: b7473f654e67c484291ceb674de71408, type: 3}
+      propertyPath: _cam
+      value: 
+      objectReference: {fileID: 551971371}
+    - target: {fileID: 5719459458439634429, guid: b7473f654e67c484291ceb674de71408, type: 3}
       propertyPath: _target
       value: 
       objectReference: {fileID: 1906007863}
@@ -1369,6 +1373,11 @@ Transform:
   m_Children: []
   m_Father: {fileID: 1063460235}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!20 &551971371 stripped
+Camera:
+  m_CorrespondingSourceObject: {fileID: 7634459453689375871, guid: b7473f654e67c484291ceb674de71408, type: 3}
+  m_PrefabInstance: {fileID: 403821425}
+  m_PrefabAsset: {fileID: 0}
 --- !u!1 &619897288
 GameObject:
   m_ObjectHideFlags: 0
