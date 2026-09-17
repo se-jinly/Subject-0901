@@ -68,7 +68,7 @@ public class CameraFollowing : MonoBehaviour
             + transform.forward * forwardAmount;
         transform.position = result;
 
-        UpdateSubPixel(rightRaw, rightRaw, upRaw, upSnapped, pixelSize);
+        UpdateSubPixel(rightRaw, rightSnapped, upRaw, upSnapped, pixelSize);
         ApplyUVRect();
     }
 
@@ -78,6 +78,7 @@ public class CameraFollowing : MonoBehaviour
     {
         if (!_useSubPixel)
         {
+            Debug.Log(_subPixel);
             _subPixel = Vector2.zero;
             return;
         }
@@ -91,15 +92,28 @@ public class CameraFollowing : MonoBehaviour
         float texelX = 1f / _rtWidth;
         float texelY = 1f / _rtHeight;
 
-        float x = 1 + _subPixel.x * texelX;
-        float y = 1 + _subPixel.y * texelY;
+        float x = (1 + _subPixel.x) * texelX;
+        float y = (1 + _subPixel.y) * texelY;
 
-        float width = _cam.orthographicSize * 2 - 2 * texelX;
-        float height = _cam.orthographicSize * 2 - 2 * texelY;
+        float width = (_rtWidth - 2) * texelX;
+        float height = (_rtHeight - 2) * texelY;
+
+        _rawImage.uvRect = new Rect(x, y, width, height);
     }
 
-    //public Ray ScreenPointToRay()
-    //{
-    //    return ray;
-    //}
+    public Ray ScreenPointToRay(Vector2 screenPos)
+    {
+        screenPos.x /= Screen.width;
+        screenPos.y /= Screen.height;
+
+        screenPos.x *= _rawImage.uvRect.width;
+        screenPos.x += _rawImage.uvRect.x;
+        screenPos.y *= _rawImage.uvRect.height;
+        screenPos.y += _rawImage.uvRect.y;
+
+        Vector3 viewport = new(screenPos.x, screenPos.y, 0f);
+
+        Debug.Log(viewport);
+        return _cam.ViewportPointToRay(viewport);
+    }
 }

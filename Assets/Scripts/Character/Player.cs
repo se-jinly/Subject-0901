@@ -15,6 +15,7 @@ public class Player : MonoBehaviour, IDamageable
     [SerializeField] private float _gravity = -10f;
     [SerializeField] private float _rotationSpeed = 720f;
     private Camera _cam;
+    [SerializeField] private CameraFollowing _cameraFollowing;
     [SerializeField] private float _aimPlaneHeight = 1f;
     private Plane _groundPlane;
     private const float MinAimDistanceSqr = 0.01f;
@@ -72,6 +73,7 @@ public class Player : MonoBehaviour, IDamageable
     [SerializeField] private AudioClip _dashCilp;
     [SerializeField] private AudioClip _dieCilp;
     private AudioSource _audioSource;
+
 
 
 
@@ -255,10 +257,7 @@ public class Player : MonoBehaviour, IDamageable
     void Rotate() // 기본 회전은 전부 rotate에서
     {
         _groundPlane = new(Vector3.up, transform.position + Vector3.up * _aimPlaneHeight);
-        Vector2 mouseScreenPos = Mouse.current.position.ReadValue();
-        mouseScreenPos.x /= Screen.width;
-        mouseScreenPos.y /= Screen.height;
-        Ray ray = _cam.ViewportPointToRay(mouseScreenPos);
+        Ray ray = _cameraFollowing.ScreenPointToRay(Mouse.current.position.ReadValue());
         if (_groundPlane.Raycast(ray, out float dist))
         {
             Vector3 hitPoint = ray.GetPoint(dist);
