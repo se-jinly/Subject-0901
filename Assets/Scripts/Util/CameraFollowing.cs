@@ -78,7 +78,6 @@ public class CameraFollowing : MonoBehaviour
     {
         if (!_useSubPixel)
         {
-            Debug.Log(_subPixel);
             _subPixel = Vector2.zero;
             return;
         }
@@ -113,7 +112,6 @@ public class CameraFollowing : MonoBehaviour
 
         Vector3 viewport = new(screenPos.x, screenPos.y, 0f);
 
-        Debug.Log(viewport);
         return _cam.ViewportPointToRay(viewport);
     }
 }
