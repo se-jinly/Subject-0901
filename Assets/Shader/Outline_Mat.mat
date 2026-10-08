@@ -38,13 +38,13 @@ Material:
     m_Ints: []
     m_Floats:
     - _DepthDarken: 1
-    - _DepthThreshold: 0.3
+    - _DepthThreshold: 0.5
     - _NormalBrighten: 1.4
-    - _NormalThreshold: 0.3
+    - _NormalThreshold: 1.5
     - _OutlineThickness: 1
     m_Colors:
     - _NormalBias: {r: 1, g: 0.2, b: 0.5, a: 0}
     - _OutlineColor: {r: 0.1452893, g: 1, b: 0, a: 1}
-    - _RenderSize: {r: 482, g: 272, b: 0, a: 0}
+    - _RenderSize: {r: 642, g: 362, b: 0, a: 0}
   m_BuildTextureStacks: []
   m_AllowLocking: 1

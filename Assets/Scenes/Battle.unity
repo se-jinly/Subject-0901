@@ -949,6 +949,10 @@ PrefabInstance:
       value: 
       objectReference: {fileID: 1906007863}
     - target: {fileID: 5719459458439634429, guid: b7473f654e67c484291ceb674de71408, type: 3}
+      propertyPath: _rtWidth
+      value: 642
+      objectReference: {fileID: 0}
+    - target: {fileID: 5719459458439634429, guid: b7473f654e67c484291ceb674de71408, type: 3}
       propertyPath: _offset.x
       value: 0
       objectReference: {fileID: 0}
@@ -964,6 +968,10 @@ PrefabInstance:
       propertyPath: _rawImage
       value: 
       objectReference: {fileID: 1357067828}
+    - target: {fileID: 5719459458439634429, guid: b7473f654e67c484291ceb674de71408, type: 3}
+      propertyPath: _rtHeight
+      value: 362
+      objectReference: {fileID: 0}
     - target: {fileID: 5719459458439634429, guid: b7473f654e67c484291ceb674de71408, type: 3}
       propertyPath: _useSubPixel
       value: 1
@@ -1040,7 +1048,7 @@ Light:
   m_InnerSpotAngle: 21.80208
   m_CookieSize2D: {x: 10, y: 10}
   m_Shadows:
-    m_Type: 0
+    m_Type: 1
     m_Resolution: -1
     m_CustomResolution: -1
     m_Strength: 1
@@ -1636,6 +1644,14 @@ PrefabInstance:
     - target: {fileID: 6024616223342826572, guid: e92a9434e6ee876458fed4690f73ef9f, type: 3}
       propertyPath: _attackDamage
       value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 6024616223342826572, guid: e92a9434e6ee876458fed4690f73ef9f, type: 3}
+      propertyPath: _attackCoolDown
+      value: 0.1
+      objectReference: {fileID: 0}
+    - target: {fileID: 6351647548090920082, guid: e92a9434e6ee876458fed4690f73ef9f, type: 3}
+      propertyPath: _attackCooldown
+      value: 0.1
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
@@ -4798,12 +4814,12 @@ MonoBehaviour:
   _rangedPrefab: {fileID: 2247987598496169141, guid: 5e773842417559a41ae2da158736e762, type: 3}
   _bossPrefab: {fileID: 5402778667621759569, guid: f4dd27cea11816e479ec107c6984c523, type: 3}
   _waves:
-  - meleeCount: 2
-    rangedCount: 1
+  - meleeCount: 15
+    rangedCount: 5
     hasBoss: 0
   - meleeCount: 1
     rangedCount: 3
-    hasBoss: 0
+    hasBoss: 1
   - meleeCount: 2
     rangedCount: 2
     hasBoss: 0

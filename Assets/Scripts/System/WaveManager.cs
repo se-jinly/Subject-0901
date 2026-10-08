@@ -50,7 +50,7 @@ public class WaveManager : MonoBehaviour
             SpawnWave(_waves[i]);
             yield return new WaitUntil(() =>
             {
-                _enemies.RemoveAll(e => e == null);
+                _killCount += _enemies.RemoveAll(e => e == null);
                 return _enemies.Count == 0;
             });
             if (i + 1 < _waves.Length)
@@ -78,7 +78,6 @@ public class WaveManager : MonoBehaviour
         if (enemy != null)
         {
             _enemies.Add(enemy);
-            _killCount++;
         }
     }
 
