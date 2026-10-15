@@ -15,7 +15,6 @@ public abstract class Enemy : MonoBehaviour, IDamageable
     private HitFlash _hitFlash;
 
 
-
     [SerializeField] protected float _detectRange = 3f;
     // 이제 nav쓰니까 이거 뭔가 어떻게 할 수 없나? 있을 것 같은데
     // 그리고 다른 건데 이거 코딩할 때 지키는 규칙들이 좀 있던데 내가 그걸 잘 모르겠네
@@ -44,7 +43,6 @@ public abstract class Enemy : MonoBehaviour, IDamageable
         _animator = GetComponentInChildren<Animator>();
         _agent = GetComponent<NavMeshAgent>();
         _agent.speed = _moveSpeed;
-
     }
 
     private void Update()

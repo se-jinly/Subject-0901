@@ -29,7 +29,7 @@ public class WaveManager : MonoBehaviour
     [SerializeField] private GameObject _clearObject;
     private int _currentWave;
     [SerializeField] private RewardManager _rewardManager;
-    [SerializeField] private Player _player;
+    [SerializeField] private Player _player;    
     [SerializeField] private TextMeshProUGUI _resultText;
 
     private float _startTime;

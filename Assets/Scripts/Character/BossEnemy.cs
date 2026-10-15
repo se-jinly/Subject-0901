@@ -33,7 +33,6 @@ public class BossEnemy : Enemy
         base.Awake();
         _patternTimer = _patternInterval;
         _meleeAttack = GetComponent<MeleeAttack>();
-
         BossHealthBar.Instance.SetHealth(_currentHp, _maxHp);
         BossHealthBar.Instance.Show();
     }
@@ -120,6 +119,7 @@ public class BossEnemy : Enemy
     {
         if(IsPatternRunning)
         {
+            
             _agent.SetDestination(transform.position);
             return;
         }
