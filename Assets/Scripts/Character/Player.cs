@@ -89,6 +89,11 @@ public class Player : MonoBehaviour, IDamageable
 
     public bool InputLocked { get; set; }
 
+    [Header("사망 이펙트")]
+    [Tooltip("죽은 자리 바닥에 나오는 이펙트. 비워두면 없음"), SerializeField] private GameObject _deathEffectPrefab;
+    [Tooltip("이펙트가 나오는 월드 Y 높이 (바닥 위)"), SerializeField] private float _deathEffectHeight = 0.15f;
+    [Tooltip("이펙트가 사라지기까지 시간(초)"), SerializeField] private float _deathEffectLifetime = 3f;
+
     [Header("오디오")]
     [SerializeField] private AudioClip _dashCilp;
     [SerializeField] private AudioClip _dieCilp;
@@ -216,7 +221,15 @@ public class Player : MonoBehaviour, IDamageable
         _isDead = true;
         _cc.enabled = false;
         _animator.SetTrigger("Die");
+        SpawnDeathEffect();
         StartCoroutine(DieRoutine());
+    }
+
+    private void SpawnDeathEffect()
+    {
+        if (_deathEffectPrefab == null) return;
+        Vector3 pos = new Vector3(transform.position.x, _deathEffectHeight, transform.position.z);
+        Destroy(Instantiate(_deathEffectPrefab, pos, Quaternion.identity), _deathEffectLifetime);
     }
 
     private IEnumerator DieRoutine()

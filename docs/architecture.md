@@ -4,7 +4,7 @@
 - Title: TitleManager.StartGame() → "Battle" 씬 로드. OpenSettings()로 설정창 열기
 - Battle: WaveManager가 게임 전체 흐름을 진행. Esc → PauseManager 일시정지 메뉴
 - 클리어: ClearUI.Restart() → Battle 재시작 / GoTitle() → Title
-- 플레이어 사망: Player.Die() → 1.5초 뒤 씬 재로드 (게임오버 화면 없음)
+- 플레이어 사망: Player.Die() → 사망 이펙트(_deathEffectPrefab, HolyJudgment) 생성 → _dieWait 뒤 씬 재로드 (게임오버 화면 없음)
 
 ## 게임 루프 (WaveManager.WaveRoutine)
 1. 웨이브 텍스트 갱신 → 대기(_waveInterval)

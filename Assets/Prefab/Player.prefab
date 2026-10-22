@@ -6909,6 +6909,9 @@ MonoBehaviour:
   _attackStartTime: 0.5
   _attackEndTime: 1.2
   _attackHitTime: 0.75
+  _deathEffectPrefab: {fileID: 5780675320438151714, guid: 70e5be8f5c25b1a4487aa3b3904a8a5c, type: 3}
+  _deathEffectHeight: 0.15
+  _deathEffectLifetime: 3
   _dashCilp: {fileID: 8300000, guid: d396a9241ea5e5b4aaee292bf734fb57, type: 3}
   _dieCilp: {fileID: 8300000, guid: 4c0131c4d035645458186fc8e72013ae, type: 3}
 --- !u!114 &6351647548090920082

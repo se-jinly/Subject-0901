@@ -12,6 +12,7 @@
 | 2026-10-22 | Assets/Prefab/BloodSlashArc.prefab (기존 BloodRed.mat 재사용) | Claude Code | 플레이어 E 베기용 핏빛 이펙트. 기존 SlashArc의 모양은 두고 색을 붉게 바꾼 사본에, 근접 공격식 쐐기 잔상과 흩어지는 네모를 더해 코드로 생성 (외부 이미지 없음, 시험용) | - |
 | 2026-10-22 | Assets/Prefab/HolySlash.prefab, HolyHit.prefab, EnemyArrow.prefab, Assets/Effects/EnemyArrow.mat, HolyArrow.mat (기존 SlashWhite.mat 재사용) | Claude Code | 적 근접 휘두름·타격, 적 화살(Arrow 변형 + 빛 꼬리) 이펙트를 은/흰색 + 옅은 금색으로 코드로 생성. 머티리얼도 코드로 생성 (외부 이미지 없음, 시험용) | - |
 | 2026-10-22 | Assets/Prefab/GiantArrow.prefab, SlashArc.prefab (기존 에셋 수정) | Claude Code | 거대 화살에 빛 꼬리·적중 이펙트·HolyArrow.mat 적용, 횡베기 SlashArc 색을 은/흰색 + 금색 파편으로 조정 | - |
+| 2026-10-22 | Assets/Prefab/HolyJudgment.prefab (기존 SlashWhite.mat 재사용) | Claude Code | 플레이어 사망 이펙트(빛기둥 + 바닥 인장 링 + 충격 링 + 떠오르는 빛 조각, 은/흰색 + 금색)를 코드로 생성 (외부 이미지 없음, 시험용) | - |
 
 ## 외부 에셋 출처
 AI로 만든 것이 아닌 외부 에셋의 출처를 기록합니다.
