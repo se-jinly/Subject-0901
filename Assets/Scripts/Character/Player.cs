@@ -35,6 +35,12 @@ public class Player : MonoBehaviour, IDamageable
     private float _cooldownLeft;
     private bool IsDashing => _dashTimeLeft > 0f;
 
+    [Header("대시 연출")]
+    [Tooltip("대시하는 동안 플레이어를 따라다니며 궤적을 남기는 피 파도 이펙트. 비워두면 연출 없음"), SerializeField] private GameObject _dashEffectPrefab;
+    [Tooltip("이펙트가 나오는 월드 Y 높이 (바닥 위)"), SerializeField] private float _dashEffectHeight = 0.15f;
+    [Tooltip("생성 후 이펙트가 완전히 지워지기까지 시간(초). 대시 시간 + 궤적이 남아 있는 시간보다 길어야 함"), SerializeField] private float _dashEffectLifetime = 2f;
+    private GameObject _dashEffect;
+
     [Header("점프")]
     [SerializeField] private bool _isInCombat;
     [SerializeField] private float _jumpSpeed = 6f;
@@ -51,7 +57,11 @@ public class Player : MonoBehaviour, IDamageable
     private int _currentHp;
 
     [SerializeField] private float _dieWait = 1.5f;
+    [Tooltip("HP가 0 이하가 된 뒤 실제로 죽기까지의 유예 시간(초). 그 안에 회복하면 생존"), SerializeField] private float _deathGrace = 0.1f;
     private bool _isDead = false;
+    private bool _isDying;
+    // 사망한 뒤에는 남아 있는 공격·스킬이 더 이상 효과를 내지 않도록 다른 스크립트가 확인함
+    public bool IsDead => _isDead;
     [SerializeField] private HealthBar _healthBar;
 
 
@@ -59,6 +69,16 @@ public class Player : MonoBehaviour, IDamageable
     private Vector3 _camRight;
 
 
+
+    [Header("원거리 공격")]
+    [Tooltip("꺼두면 원거리 공격 입력이 무시됨"), SerializeField] private bool _rangedEnabled = false;
+
+    [Header("공격 연출")]
+    [Tooltip("공격 애니메이션을 재생하기 시작하는 클립 시점(초). 준비 동작을 건너뛰어 반응이 빨라짐"), SerializeField] private float _attackStartTime = 0.5f;
+    [Tooltip("공격 애니메이션이 끝나는 클립 시점(초). Animator의 Attack → Idle 전환 시점과 같아야 함"), SerializeField] private float _attackEndTime = 1.2f;
+    [Tooltip("클립에서 칼이 휘둘러지기 시작하는 시점(초). 이 시점에 피해가 들어감"), SerializeField] private float _attackHitTime = 0.75f;
+    private float _attackAnimSpeed = 1f;
+    private float _attackReadyTime;
 
     private MeleeAttack _meleeAttack;
     private RangedAttack _rangedAttack;
@@ -101,6 +121,9 @@ public class Player : MonoBehaviour, IDamageable
         _hitFlash = GetComponent<HitFlash>();
         _healthBar.SetHealth(_currentHp, _maxHp);
         _animator = GetComponentInChildren<Animator>();
+        // 공격 쿨다운 안에 애니메이션이 끝나도록 재생 속도를 맞춤
+        _attackAnimSpeed = (_attackEndTime - _attackStartTime) / Mathf.Max(0.05f, _meleeAttack.Cooldown);
+        _animator.SetFloat("AttackSpeed", _attackAnimSpeed);
         _rangedAttack = GetComponent<RangedAttack>();
 
         _audioSource = GetComponent<AudioSource>();
@@ -132,9 +155,9 @@ public class Player : MonoBehaviour, IDamageable
         _animator.SetFloat("Speed", _input.magnitude);
         _animator.SetBool("IsDash", IsDashing);
         if (IsDashing) { Dash(); }
-        else { Rotate(); Move(); }
+        else { EndDashEffect(); Rotate(); Move(); }
         TryAttack();
-        TryRangedAttack();
+        if (_rangedEnabled) TryRangedAttack();
     }
 
     public void AddMaxHealth(float amount)
@@ -146,6 +169,7 @@ public class Player : MonoBehaviour, IDamageable
     }
     public void Heal(float amount)
     {
+        if (_isDead) return;
         int value = Mathf.RoundToInt(amount);
         _currentHp = Mathf.Min(_currentHp + value, _maxHp);
         _healthBar.SetHealth(_currentHp, _maxHp);
@@ -167,6 +191,15 @@ public class Player : MonoBehaviour, IDamageable
         _healthBar.SetHealth(_currentHp, _maxHp);
         Debug.Log($"{gameObject}가, {amount}맞음, {_currentHp}남음");
         _hitFlash.Play();
+        if (_currentHp <= 0 && !_isDying) StartCoroutine(DeathGraceRoutine());
+    }
+
+    // HP가 0 이하가 되어도 바로 죽지 않고 잠시 기다림: 그 사이 회복해서 HP가 남으면 생존
+    private IEnumerator DeathGraceRoutine()
+    {
+        _isDying = true;
+        yield return new WaitForSeconds(_deathGrace);
+        _isDying = false;
         if (_currentHp <= 0) Die();
     }
 
@@ -191,7 +224,7 @@ public class Player : MonoBehaviour, IDamageable
         //Time.timeScale = 0f;
         gameObject.layer = LayerMask.NameToLayer("Default");
         yield return new WaitForSecondsRealtime(_dieWait);
-        Time.timeScale = 1f;
+        TimeControl.Reset();
         gameObject.layer = LayerMask.NameToLayer("Player");
         SceneManager.LoadScene(SceneManager.GetActiveScene().name);
     }
@@ -199,8 +232,20 @@ public class Player : MonoBehaviour, IDamageable
     private void TryAttack()
     {
         if (!_attackAction.WasPressedThisFrame()) return;
-        _animator.SetTrigger("Attack");
-        _meleeAttack.Execute();
+        if (Time.time < _attackReadyTime) return;
+        _attackReadyTime = Time.time + _meleeAttack.Cooldown;
+        // 준비 동작을 건너뛰고 휘두르기 직전 시점부터 바로 재생
+        // (고정 시간 오프셋은 배속이 적용된 상태 시간 기준이라 재생 속도로 나눠야 클립의 해당 시점이 됨)
+        _animator.CrossFadeInFixedTime("Attack", 0.03f, 0, _attackStartTime / _attackAnimSpeed);
+        StartCoroutine(AttackHitRoutine());
+    }
+
+    // 클릭 즉시가 아니라 애니메이션에서 칼이 휘둘러지기 시작하는 시점에 피해를 줌
+    private IEnumerator AttackHitRoutine()
+    {
+        yield return new WaitForSeconds((_attackHitTime - _attackStartTime) / _attackAnimSpeed);
+        if (_isDead) yield break;
+        _meleeAttack.Execute(true);
     }
 
     private void TryMobility()
@@ -244,13 +289,33 @@ public class Player : MonoBehaviour, IDamageable
             }
             _dashTimeLeft = _dashDuration;
             _cooldownLeft = _dashCooldown;
+            SpawnDashEffect();
         }
+    }
+
+    private void SpawnDashEffect()
+    {
+        if (_dashEffectPrefab == null) return;
+        _dashEffect = Instantiate(_dashEffectPrefab, DashEffectPosition(), Quaternion.LookRotation(_dashDirection));
+        Destroy(_dashEffect, _dashEffectLifetime);
+    }
+
+    private Vector3 DashEffectPosition() => new Vector3(transform.position.x, _dashEffectHeight, transform.position.z);
+
+    // 대시가 끝나면 새 파티클만 멈추고, 이미 나온 궤적은 스스로 사라질 때까지 둠
+    private void EndDashEffect()
+    {
+        if (_dashEffect == null) return;
+        foreach (ParticleSystem ps in _dashEffect.GetComponentsInChildren<ParticleSystem>())
+            ps.Stop(false, ParticleSystemStopBehavior.StopEmitting);
+        _dashEffect = null;
     }
     private void Dash()
     {
         Vector3 dash = _dashDirection * _dashSpeed;
         dash.y = 0;
         _cc.Move(dash * Time.deltaTime);
+        if (_dashEffect != null) _dashEffect.transform.position = DashEffectPosition();
     }
     // 대시 중엔 스킬 및 공격 사용 불가
 

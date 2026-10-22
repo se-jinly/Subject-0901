@@ -26,9 +26,12 @@ public class MeleeAttack : MonoBehaviour
         TickTime();
     }
 
-    public void Execute()
+    public float Cooldown => _attackCooldown;
+
+    // ignoreCooldown: 호출하는 쪽(플레이어)이 공격 간격을 직접 관리할 때 사용
+    public void Execute(bool ignoreCooldown = false)
     {
-        if (_attackCooldownLeft > 0) return;
+        if (!ignoreCooldown && _attackCooldownLeft > 0) return;
         int hitCount = 0;
         _attackCooldownLeft = _attackCooldown;
         Vector3 center = transform.position + _attackOffsetRatio * _attackRange * transform.forward;

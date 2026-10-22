@@ -6823,6 +6823,8 @@ GameObject:
   - component: {fileID: 7508432326092174595}
   - component: {fileID: 6024616223342826572}
   - component: {fileID: 5417425120373044912}
+  - component: {fileID: 3264645710940457807}
+  - component: {fileID: 8720949784089651377}
   m_Layer: 8
   m_Name: Player
   m_TagString: Player
@@ -6892,13 +6894,21 @@ MonoBehaviour:
   _dashSpeed: 20
   _dashDuration: 0.25
   _dashCooldown: 1
+  _dashEffectPrefab: {fileID: 2617347938905898626, guid: 06b86e3a67d1f7246aab0b4fe4c1522b, type: 3}
+  _dashEffectHeight: 0.15
+  _dashEffectLifetime: 2
   _isInCombat: 1
   _jumpSpeed: 6
   _knockbackPower: 10
   _decay: 10
-  _maxHp: 20
+  _maxHp: 12
   _dieWait: 5
+  _deathGrace: 0.1
   _healthBar: {fileID: 0}
+  _rangedEnabled: 0
+  _attackStartTime: 0.5
+  _attackEndTime: 1.2
+  _attackHitTime: 0.75
   _dashCilp: {fileID: 8300000, guid: d396a9241ea5e5b4aaee292bf734fb57, type: 3}
   _dieCilp: {fileID: 8300000, guid: 4c0131c4d035645458186fc8e72013ae, type: 3}
 --- !u!114 &6351647548090920082
@@ -7058,3 +7068,51 @@ AudioSource:
     m_PreInfinity: 2
     m_PostInfinity: 2
     m_RotationOrder: 4
+--- !u!114 &3264645710940457807
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3069181121838950177}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 13db9ed8202384d42a3c1000c88e8b45, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::BloodSkill
+  _damage: 10
+  _coinCost: 1000
+  _cooldown: 0.5
+  _effectPrefab: {fileID: 995662277312271991, guid: 6add55a8d449aac499fac4b145eef669, type: 3}
+  _effectHeight: 0.15
+  _effectLifetime: 3
+  _shakePower: 0.5
+  _shakeDuration: 0.6
+  _hitStopDuration: 0.08
+--- !u!114 &8720949784089651377
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3069181121838950177}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 2aabb500786c61f4795f3bff89e9022c, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::SlashSkill
+  _damage: 8
+  _range: 4.5
+  _arcAngle: 180
+  _cooldown: 10
+  _targetLayer:
+    serializedVersion: 2
+    m_Bits: 512
+  _knockbackScale: 3
+  _hitDelay: 0.35
+  _effectPrefab: {fileID: 8267335577232723036, guid: 98e14e46aa8e5174eadae5105d2333df, type: 3}
+  _effectHeight: 0.15
+  _effectLifetime: 1.5
+  _shakePower: 0.35
+  _shakeDuration: 0.3
+  _hitStopDuration: 0.06
