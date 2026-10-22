@@ -9,6 +9,7 @@
 | 2026-10-22 | Assets/Prefab/SlashArc.prefab, Assets/Effects/SlashWhite.mat | Claude Code | 횡베기 부채꼴 파티클 이펙트와 머티리얼을 코드로 생성 (외부 이미지 없음, 시험용) | - |
 | 2026-10-22 | Assets/Prefab/DeathMark.prefab, Assets/Effects/Disc.png, SoftDisc.png, DeathCircle.mat, DeathSmoke.mat | Claude Code | 적 사망 이펙트(검붉은 원 + 연기). 원 모양 텍스처 2장(Disc, SoftDisc)을 코드로 계산해서 생성 | - |
 | 2026-10-22 | Assets/Prefab/BloodSlash.prefab, BloodHit.prefab (기존 BloodRed.mat, DeathSmoke.mat 재사용) | Claude Code | 플레이어 근접 공격의 핏빛 휘두름(머리가 호를 그려 나가고 꼬리부터 지워지는 잔상 + 흩어지는 네모)·타격(교차선 + 흩어지는 네모) 파티클 이펙트를 코드로 생성 (외부 이미지 없음, 시험용) | - |
+| 2026-10-22 | Assets/Prefab/BloodSlashArc.prefab (기존 BloodRed.mat 재사용) | Claude Code | 플레이어 E 베기용 핏빛 이펙트. 기존 SlashArc의 모양은 두고 색을 붉게 바꾼 사본에, 근접 공격식 쐐기 잔상과 흩어지는 네모를 더해 코드로 생성 (외부 이미지 없음, 시험용) | - |
 
 ## 외부 에셋 출처
 AI로 만든 것이 아닌 외부 에셋의 출처를 기록합니다.
