@@ -1,5 +1,7 @@
 using System.Collections;
+using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.AI;
 
 [RequireComponent(typeof(MeleeAttack))]
 public class BossEnemy : Enemy
@@ -19,11 +21,15 @@ public class BossEnemy : Enemy
     [SerializeField] private float _dashRange = 2f;
     [Tooltip("공격 모션 시간"), SerializeField] private float _dashWindupTime = 0.5f;
 
-    [Header("범위공격")]
-    [SerializeField] private float _slamRange = 6f;
-    [SerializeField] private int _slamDamage = 6;
-    [Tooltip("공격 모션 시간"), SerializeField] private float _slamWindupTime = 0.5f;
-
+    [Header("소환")]
+    [SerializeField] private MeleeEnemy _summonPrefab;
+    [Tooltip("한 번에 소환하는 수"), SerializeField] private int _summonCount = 4;
+    [Tooltip("보스 주변 소환 반경"), SerializeField] private float _summonRadius = 2.5f;
+    [Tooltip("동시에 살아있을 수 있는 소환 졸개 최대 수"), SerializeField] private int _maxSummons = 8;
+    [Tooltip("공격 모션 시간"), SerializeField] private float _summonWindupTime = 0.5f;
+    private readonly List<Enemy> _minions = new();
+    // 소환된 졸개를 웨이브가 알 수 있도록 알림
+    public event System.Action<Enemy> Summoned;
 
 
     private MeleeAttack _meleeAttack;
@@ -41,7 +47,16 @@ public class BossEnemy : Enemy
     {
         base.TakeDamage(amount, dir);
         BossHealthBar.Instance.SetHealth(_currentHp, _maxHp);
-        if (_currentHp <= 0) BossHealthBar.Instance.Hide();
+        if (_currentHp <= 0)
+        {
+            BossHealthBar.Instance.Hide();
+            // 보스가 죽으면 남은 졸개도 함께 사라짐
+            foreach (Enemy minion in _minions)
+            {
+                if (minion != null) Destroy(minion.gameObject);
+            }
+            _minions.Clear();
+        }
     }
     protected override void TryAttack()
     {
@@ -68,8 +83,8 @@ public class BossEnemy : Enemy
             yield return StartCoroutine(DashRoutine());
         } else
         {
-            yield return new WaitForSeconds(_slamWindupTime);
-            yield return StartCoroutine(SlamRoutine());
+            yield return new WaitForSeconds(_summonWindupTime);
+            yield return StartCoroutine(SummonRoutine());
         }
         yield return new WaitForSeconds(_recoveryTime);
 
@@ -77,15 +92,18 @@ public class BossEnemy : Enemy
         _patternRoutine = null;
     }
 
-    private IEnumerator SlamRoutine()
+    private IEnumerator SummonRoutine()
     {
-        if(Vector3.Distance(_player.position, transform.position) < _slamRange)
+        _minions.RemoveAll(m => m == null);
+        int count = Mathf.Min(_summonCount, _maxSummons - _minions.Count);
+        for (int i = 0; i < count; i++)
         {
-            Vector3 dir = _player.position - transform.position;
-            dir.y = 0f;
-            dir.Normalize();
-            _player.TryGetComponent<IDamageable>(out IDamageable target);
-            target.TakeDamage(_slamDamage, dir);
+            Vector3 offset = Quaternion.Euler(0f, 360f / _summonCount * i, 0f) * Vector3.forward * _summonRadius;
+            if (!NavMesh.SamplePosition(transform.position + offset, out NavMeshHit hit, _summonRadius, NavMesh.AllAreas)) continue;
+            MeleeEnemy minion = Instantiate(_summonPrefab, hit.position, Quaternion.identity);
+            minion.SetTarget(_player);
+            _minions.Add(minion);
+            Summoned?.Invoke(minion);
         }
         yield return null;
     }

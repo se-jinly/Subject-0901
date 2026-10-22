@@ -10,6 +10,9 @@ public class RangedEnemy : Enemy
     [SerializeField] private float _tooClose = 3f;
     [Tooltip("회전 속도"), SerializeField] private float _rotateSpeed = 180f;
 
+    [Header("부대")]
+    [Tooltip("부대 일제 사격과 별개로 스스로도 계속 쏨 (부대장용)"), SerializeField] private bool _fireIndependently;
+
     protected override void Awake()
     {
         base.Awake();
@@ -18,17 +21,31 @@ public class RangedEnemy : Enemy
     }
     protected override void TryAttack()
     {
+        if (_squad != null && !_fireIndependently) return;
         if (Vector3.Distance(transform.position, _player.position) > _detectRange) return;
 
         _rangedAttack.Execute();
     }
-    protected override void Chase()
+    // 부대 신호에 맞춰 발사
+    public void FireVolley() => _rangedAttack.Execute();
+
+    protected override void FollowSlot()
+    {
+        base.FollowSlot();
+        RotateToPlayer();
+    }
+
+    private void RotateToPlayer()
     {
         Vector3 dir = _player.position - transform.position;
         dir.y = 0f;
         Quaternion targetRot = Quaternion.LookRotation(dir);
         transform.rotation = Quaternion.RotateTowards(transform.rotation, targetRot, _rotateSpeed * Time.deltaTime);
-        
+    }
+
+    protected override void Chase()
+    {
+        RotateToPlayer();
 
         float distance = Vector3.Distance(transform.position, _player.position);
         if (distance <= _tooClose)

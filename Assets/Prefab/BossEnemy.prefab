@@ -415,9 +415,14 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::BossEnemy
   _detectRange: 3
   _moveSpeed: 2
+  _slotSpeedRatio: 1.8
   _maxHp: 40
   _knockbackPower: 10
   _decay: 10
+  _healOnKill: 1
+  _coinOnKill: 2000
+  _deathEffectPrefab: {fileID: 9032424163117913864, guid: 65b4ef75aae1a7b4db1d030a2447843b, type: 3}
+  _deathEffectLifetime: 2
   _dieClip: {fileID: 8300000, guid: b21cf6f581b114249934ab9233834ff4, type: 3}
   _recoveryTime: 0.8
   _patternInterval: 1.5
@@ -426,9 +431,11 @@ MonoBehaviour:
   _dashDamage: 4
   _dashRange: 3
   _dashWindupTime: 0.3
-  _slamRange: 6
-  _slamDamage: 8
-  _slamWindupTime: 1
+  _summonPrefab: {fileID: 5922298977348393241, guid: 1ee191ae8edddd6458c4b9ef4186dcec, type: 3}
+  _summonCount: 4
+  _summonRadius: 2.5
+  _maxSummons: 8
+  _summonWindupTime: 0.5
 --- !u!1 &1031092735581688445
 GameObject:
   m_ObjectHideFlags: 0

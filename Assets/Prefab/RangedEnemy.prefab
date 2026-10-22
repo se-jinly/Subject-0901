@@ -377,13 +377,19 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::RangedEnemy
   _detectRange: 6
   _moveSpeed: 2
+  _slotSpeedRatio: 1.8
   _maxHp: 1
   _knockbackPower: 10
   _decay: 10
+  _healOnKill: 1
+  _coinOnKill: 50
+  _deathEffectPrefab: {fileID: 9032424163117913864, guid: 65b4ef75aae1a7b4db1d030a2447843b, type: 3}
+  _deathEffectLifetime: 2
   _dieClip: {fileID: 8300000, guid: b21cf6f581b114249934ab9233834ff4, type: 3}
   _keepDistance: 5
   _tooClose: 3
   _rotateSpeed: 180
+  _fireIndependently: 0
 --- !u!82 &1465229387442558094
 AudioSource:
   m_ObjectHideFlags: 0
