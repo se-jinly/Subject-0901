@@ -8,6 +8,7 @@ public class Projectile : MonoBehaviour
     private int _damage;
     private LayerMask _targetLayer;
     [SerializeField] private LayerMask _blockLayer;
+    [Tooltip("true면 대상을 맞춰도 사라지지 않고 관통 (벽에서만 사라짐)"), SerializeField] private bool _pierce;
     public void Setup(int damage, LayerMask targetLayer)
     {
         _damage = damage;
@@ -38,7 +39,7 @@ public class Projectile : MonoBehaviour
         {
             target.TakeDamage(_damage, transform.forward);
         }
-        Destroy(gameObject);
+        if (!_pierce) Destroy(gameObject);
     }
 
 }
