@@ -8,6 +8,7 @@ public class Wave
 {
     public int meleeCount;
     public int rangedCount;
+    public int squadCount;
     public bool hasBoss;
 }
 // 이게 시러이라이저블이기 때문에 아마 안에 속한 모든게 정할 수 있을 것.
@@ -18,11 +19,14 @@ public class WaveManager : MonoBehaviour
     [SerializeField] private MeleeEnemy _meleePrefab;
     [SerializeField] private RangedEnemy _rangedPrefab;
     [SerializeField] private BossEnemy _bossPrefab;
+    [SerializeField] private Squad _squadPrefab;
     [SerializeField] private Wave[] _waves;
     // 웨이브 정보만 있음 아마 숫자 많아야 십수개가 전부임
     [SerializeField] private float _waveInterval = 0.8f;
     // 간격
     private List<Enemy> _enemies = new();
+    private Enemy _boss;
+    private bool _waveHasBoss;
 
     [Header("UI")]
     [SerializeField] private TextMeshProUGUI _waveText;
@@ -50,6 +54,13 @@ public class WaveManager : MonoBehaviour
             SpawnWave(_waves[i]);
             yield return new WaitUntil(() =>
             {
+                // 보스 웨이브는 보스만 죽으면 끝 (남은 졸개는 보스와 함께 사라지므로 처치 수에 넣지 않음)
+                if (_waveHasBoss && _boss == null)
+                {
+                    _killCount++;
+                    _enemies.Clear();
+                    return true;
+                }
                 _killCount += _enemies.RemoveAll(e => e == null);
                 return _enemies.Count == 0;
             });
@@ -68,9 +79,36 @@ public class WaveManager : MonoBehaviour
     }
     private void SpawnWave(Wave wave)
     {
+        _enemySpawner.BeginWave();
+        _enemySpawner.BeginGroup(wave.meleeCount, 0f);
         for (int i = 0; i < wave.meleeCount; i++) SpawnEnemy(_meleePrefab);
+        _enemySpawner.BeginGroup(wave.rangedCount, 0f);
         for (int i = 0; i < wave.rangedCount; i++) SpawnEnemy(_rangedPrefab);
-        if (wave.hasBoss) SpawnEnemy(_bossPrefab);
+        _enemySpawner.BeginGroup(wave.squadCount, wave.squadCount > 0 ? _squadPrefab.Width : 0f);
+        for (int i = 0; i < wave.squadCount; i++) SpawnSquad(i, wave.squadCount);
+        _enemySpawner.BeginGroup(wave.hasBoss ? 1 : 0, 0f);
+        _boss = null;
+        _waveHasBoss = false;
+        if (wave.hasBoss) SpawnBoss();
+    }
+    private void SpawnBoss()
+    {
+        Enemy boss = _enemySpawner.Spawn(_bossPrefab);
+        if (boss == null) return;
+        _enemies.Add(boss);
+        _boss = boss;
+        _waveHasBoss = true;
+        // 소환된 졸개도 처치 수·웨이브 목록에 포함
+        ((BossEnemy)boss).Summoned += _enemies.Add;
+    }
+    private void SpawnSquad(int index, int count)
+    {
+        Squad squad = _enemySpawner.SpawnSquad(_squadPrefab, index, count);
+        if (squad == null) return;
+        foreach (Enemy member in squad.Members)
+        {
+            _enemies.Add(member);
+        }
     }
     private void SpawnEnemy(Enemy enemyPrefab)
     {

@@ -44,14 +44,14 @@ public class HitEffect : MonoBehaviour
         _camera.Shake(shakePower, shakeDuration);
         if (_hitStopRoutine != null) StopCoroutine(_hitStopRoutine);
         // 루틴 끊으면 다시 복구시켜야함.
-        Time.timeScale = 1f;
+        TimeControl.Set(TimeStopReason.HitStop, false);
         _hitStopRoutine = StartCoroutine(HitStop(hitStopDuration));
     }
     private IEnumerator HitStop(float hitStopDuration)
     {
-        Time.timeScale = 0f;
+        TimeControl.Set(TimeStopReason.HitStop, true);
         yield return new WaitForSecondsRealtime(hitStopDuration);
-        Time.timeScale = 1f;
+        TimeControl.Set(TimeStopReason.HitStop, false);
     }
 
 

@@ -8,6 +8,10 @@ public class Projectile : MonoBehaviour
     private int _damage;
     private LayerMask _targetLayer;
     [SerializeField] private LayerMask _blockLayer;
+    [Tooltip("true면 대상을 맞춰도 사라지지 않고 관통 (벽에서만 사라짐)"), SerializeField] private bool _pierce;
+    [Header("이펙트")]
+    [Tooltip("대상이나 벽에 닿았을 때 그 위치에 나오는 이펙트. 비워두면 없음"), SerializeField] private GameObject _hitEffectPrefab;
+    [Tooltip("이펙트가 사라지기까지 시간(초)"), SerializeField] private float _effectLifetime = 1f;
     public void Setup(int damage, LayerMask targetLayer)
     {
         _damage = damage;
@@ -27,6 +31,7 @@ public class Projectile : MonoBehaviour
         // 어느 자리에 위치해있냐가 정확히 구분 됨.
         if((_blockLayer & otherBit) != 0)
         {
+            SpawnHitEffect();
             Destroy(gameObject);
             return;
         }
@@ -37,8 +42,15 @@ public class Projectile : MonoBehaviour
             // 여기 out은 그냥 변수 하나를 if앞에 만들었다고 보면 됨.
         {
             target.TakeDamage(_damage, transform.forward);
+            SpawnHitEffect();
         }
-        Destroy(gameObject);
+        if (!_pierce) Destroy(gameObject);
+    }
+
+    private void SpawnHitEffect()
+    {
+        if (_hitEffectPrefab == null) return;
+        Destroy(Instantiate(_hitEffectPrefab, transform.position, Quaternion.LookRotation(transform.forward)), _effectLifetime);
     }
 
 }

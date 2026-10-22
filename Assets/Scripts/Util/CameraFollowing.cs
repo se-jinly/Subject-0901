@@ -29,6 +29,7 @@ public class CameraFollowing : MonoBehaviour
 
     public void Shake(float power, float duration)
     {
+        if (!GameSettings.ShakeEnabled) return;
         if (_shakeCoroutine != null) StopCoroutine(_shakeCoroutine);
         _shakeCoroutine = StartCoroutine(ShakeRoutine(power, duration));
     }

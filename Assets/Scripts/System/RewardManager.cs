@@ -41,11 +41,11 @@ public class RewardManager : MonoBehaviour
         _panel.SetActive(true);
         _isSelecting = true;
         _player.InputLocked = true;
-        Time.timeScale = 0f;
+        TimeControl.Set(TimeStopReason.Reward, true);
         yield return new WaitUntil(() => _isSelecting == false);
         _panel.SetActive(false);
         _player.InputLocked = false;
-        Time.timeScale = 1f;
+        TimeControl.Set(TimeStopReason.Reward, false);
     }
 
     private void OnSelect(int index)

@@ -12,6 +12,7 @@ public abstract class Enemy : MonoBehaviour, IDamageable
     protected Transform _player;
     protected NavMeshAgent _agent;
     protected Animator _animator;
+    protected Squad _squad;
     private HitFlash _hitFlash;
 
 
@@ -19,6 +20,7 @@ public abstract class Enemy : MonoBehaviour, IDamageable
     // 이제 nav쓰니까 이거 뭔가 어떻게 할 수 없나? 있을 것 같은데
     // 그리고 다른 건데 이거 코딩할 때 지키는 규칙들이 좀 있던데 내가 그걸 잘 모르겠네
     [SerializeField] private float _moveSpeed = 2f;
+    [Tooltip("부대 대형으로 돌아갈 때 이동 속도 배율 (클수록 대형을 빨리 갖춤)"), SerializeField] private float _slotSpeedRatio = 1.8f;
 
 
     [Header("체력")]
@@ -30,6 +32,19 @@ public abstract class Enemy : MonoBehaviour, IDamageable
     protected Vector3 _externalForce;
     [SerializeField] private float _knockbackPower = 10f;
     [Tooltip("미끄러짐"), SerializeField] private float _decay = 10f;
+
+    [Header("처치 보상")]
+    [Tooltip("처치 시 플레이어 회복량"), SerializeField] private int _healOnKill = 1;
+    [Tooltip("처치 시 얻는 코인"), SerializeField] private int _coinOnKill = 50;
+    private bool _isDead;
+
+    // 스킬을 쓰는 동안 true: 일반 공격·추적·대형 복귀를 멈춤 (부대장 스킬용)
+    public bool IsActing { get; set; }
+    public Transform Target => _player;
+
+    [Header("사망 이펙트")]
+    [Tooltip("죽은 자리 바닥에 나오는 이펙트 (적 크기에 맞춰 커짐)"), SerializeField] private GameObject _deathEffectPrefab;
+    [Tooltip("이펙트가 사라지기까지 시간(초)"), SerializeField] private float _deathEffectLifetime = 2f;
 
     [Header("오디오")]
     [SerializeField] private AudioClip _dieClip;
@@ -49,9 +64,14 @@ public abstract class Enemy : MonoBehaviour, IDamageable
     {
         if (_player == null) return;
         _animator.SetFloat("Speed", _agent.velocity.magnitude);
+        if (IsActing) return;
         ApplyKnockback();
         TryAttack();
-        Chase();
+        bool followSlot = _squad != null && !ShouldLeaveSlot();
+        // 대형으로 돌아갈 때는 더 빠르게 움직여 대형을 빨리 갖춤
+        _agent.speed = followSlot ? _moveSpeed * _slotSpeedRatio : _moveSpeed;
+        if (followSlot) FollowSlot();
+        else Chase();
     }
 
     private void ApplyKnockback()
@@ -64,15 +84,32 @@ public abstract class Enemy : MonoBehaviour, IDamageable
     protected abstract void TryAttack();
     protected abstract void Chase();
     public void SetTarget(Transform target) => _player = target;
+    public void JoinSquad(Squad squad) => _squad = squad;
+    // 부대 소속일 때 대형을 벗어나 개인 행동(Chase)을 할지
+    protected virtual bool ShouldLeaveSlot() => false;
+    protected virtual void FollowSlot() => _agent.SetDestination(_squad.GetSlotPosition(this));
+
+    private void SpawnDeathEffect()
+    {
+        if (_deathEffectPrefab == null) return;
+        GameObject effect = Instantiate(_deathEffectPrefab, transform.position + Vector3.up * 0.05f, Quaternion.identity);
+        effect.transform.localScale = _deathEffectPrefab.transform.localScale * transform.localScale.x;
+        Destroy(effect, _deathEffectLifetime);
+    }
 
     public virtual void TakeDamage(int amount, Vector3 dir)
     {
+        if (_isDead) return;
         _currentHp -= amount;
         _externalForce = dir * _knockbackPower;
         Debug.Log($"{name}, HP: {_currentHp}");
         if (_currentHp <= 0)
         {
+            _isDead = true;
             AudioSource.PlayClipAtPoint(_dieClip, Camera.main.transform.position);
+            if (_player != null && _player.TryGetComponent(out Player player)) player.Heal(_healOnKill);
+            if (CoinUI.Instance != null) CoinUI.Instance.Add(_coinOnKill);
+            SpawnDeathEffect();
             Destroy(gameObject);
         }
         _hitFlash.Play();
