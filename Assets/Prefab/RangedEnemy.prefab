@@ -354,7 +354,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: ecff93937831d5d478258234d8095286, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::RangedAttack
-  _projectilePrefab: {fileID: -3693037148923187780, guid: 55a863b5f38760d4a9ad955c54102246, type: 3}
+  _projectilePrefab: {fileID: 1985926612603146123, guid: ee6fb8c4262173d4fa0c4cc1544de5a7, type: 3}
   _targetLayer:
     serializedVersion: 2
     m_Bits: 256

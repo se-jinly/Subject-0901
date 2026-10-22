@@ -28,7 +28,9 @@
 ## 전투 (Combat)
 - IDamageable.TakeDamage(int, Vector3 넉백방향): Player, Enemy가 구현
 - MeleeAttack: 앞쪽 OverlapSphere로 _targetLayer 타격 → HitFeedback(흔들림·히트스톱) → 효과음. 선택적으로 휘두름 이펙트(_swingEffectPrefab, 공격자 앞)와 타격 이펙트(_hitEffectPrefab, 맞은 대상 위치)를 생성. 비워두면 없음. 플레이어는 BloodSlash/BloodHit(핏빛), 적은 프리팹만 바꿔 다른 색을 쓸 예정
-- RangedAttack: Projectile 생성 → Projectile이 레이어 비트마스크로 대상/벽 판정. _pierce를 켜면 대상을 관통(벽에서만 사라짐)
+- RangedAttack: Projectile 생성 → Projectile이 레이어 비트마스크로 대상/벽 판정. _pierce를 켜면 대상을 관통(벽에서만 사라짐). _hitEffectPrefab을 지정하면 대상/벽에 닿은 위치에 이펙트 생성 (비우면 없음)
+  - 화살 프리팹: Arrow는 플레이어용(이펙트 없음), EnemyArrow는 Arrow의 변형으로 적 병사·부대장용(빛 꼬리 + HolyHit), GiantArrow는 부대장 거대 화살
+- 이펙트 색 방향: 플레이어 이펙트(BloodSlash, BloodHit, BloodSlashArc, BloodBurst, BloodWave)는 핏빛/악마적, 적 이펙트(HolySlash, HolyHit, EnemyArrow, GiantArrow, SlashArc)는 은/흰색 + 옅은 금색. 적 사망(DeathMark)은 플레이어 쪽 느낌이라 검붉은 색 유지
 - HitEffect (싱글턴 Instance): 카메라 흔들림 + 히트스톱(TimeControl의 HitStop 플래그). 흔들림 끄기 설정이면 CameraFollowing.Shake()가 무시함
 - 부대장 스킬 (Enemy에 붙이는 컴포넌트, 쿨타임 + 선딜 후 발동, 스킬 중 Enemy.IsActing = true로 일반 행동 정지)
   - LeaderDashSkill: 선딜 뒤 플레이어 쪽으로 돌진, 닿으면 피해 (근접 대장)

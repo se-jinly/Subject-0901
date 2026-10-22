@@ -240,6 +240,10 @@ MonoBehaviour:
     _shakeDuration: 0.1
     _hitStopDuration: 0.04
     _maxMultiplier: 3
+  _swingEffectPrefab: {fileID: 3908648421717127165, guid: fcb437fc4646dcb46873ab2e9f486c6a, type: 3}
+  _hitEffectPrefab: {fileID: 4369350130750300741, guid: 858539e9f1dbf4a419fe5262468b825b, type: 3}
+  _effectHeight: 1
+  _effectLifetime: 1
   _hitClip: {fileID: 8300000, guid: 2e06f32dd53959a488d9b16bd2cacaaf, type: 3}
 --- !u!114 &7440400041498312111
 MonoBehaviour:
