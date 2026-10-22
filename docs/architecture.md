@@ -1,8 +1,8 @@
-# 코드 구조 (2026-10-20 기준, 구조가 바뀌면 갱신)
+# 코드 구조 (2026-10-22 기준, 구조가 바뀌면 갱신)
 
 ## 씬 흐름
-- Title: TitleManager.StartGame() → "Battle" 씬 로드
-- Battle: WaveManager가 게임 전체 흐름을 진행
+- Title: TitleManager.StartGame() → "Battle" 씬 로드. OpenSettings()로 설정창 열기
+- Battle: WaveManager가 게임 전체 흐름을 진행. Esc → PauseManager 일시정지 메뉴
 - 클리어: ClearUI.Restart() → Battle 재시작 / GoTitle() → Title
 - 플레이어 사망: Player.Die() → 1.5초 뒤 씬 재로드 (게임오버 화면 없음)
 
@@ -18,16 +18,29 @@
 - RewardManager: _pool에서 중복 없이 카드 수만큼 뽑아 RewardCard에 표시 → 선택 시 Apply()가 Player 메서드 호출
 - 새 보상 추가: RewardType에 항목 추가 → RewardManager.Apply()에 case 추가 → 필요하면 Player에 메서드 추가
 
+## 시스템 (System)
+- TimeControl (static): 시간 멈춤을 이유별 플래그(HitStop, Reward, Pause)로 관리. 하나라도 켜져 있으면 timeScale 0, 씬 로드 시 전부 초기화. timeScale은 여기서만 바꿈
+- PauseManager: Esc로 일시정지 메뉴(계속하기/설정/다시 시작/타이틀로/게임 종료). 다시 시작·타이틀로는 ClearUI 재사용. 입력 잠김(보상 선택·클리어)이나 사망 중에는 Esc 무시. 설정창이 열려 있으면 Esc는 설정창만 닫음
+- GameSettings (static): 전체·배경음·효과음 볼륨, 전체화면, 화면 흔들림 설정. PlayerPrefs에 저장하고 게임 시작 시 자동 적용, 바뀌면 Changed 이벤트
+  - 효과음 = AudioListener.volume(전체 × 효과음). Enemy의 PlayClipAtPoint 소리도 여기에 적용됨
+  - BGM = BgmVolume 컴포넌트가 AudioSource에 (원래 볼륨 × 전체 × 배경음)을 적용. BGM 소스는 ignoreListenerVolume을 켬. 새 BGM 소스에는 BgmVolume을 붙일 것
+
 ## 전투 (Combat)
 - IDamageable.TakeDamage(int, Vector3 넉백방향): Player, Enemy가 구현
 - MeleeAttack: 앞쪽 OverlapSphere로 _targetLayer 타격 → HitFeedback(흔들림·히트스톱) → 효과음
-- RangedAttack: Projectile 생성 → Projectile이 레이어 비트마스크로 대상/벽 판정
-- HitEffect (싱글턴 Instance): 카메라 흔들림 + 히트스톱(Time.timeScale = 0)
+- RangedAttack: Projectile 생성 → Projectile이 레이어 비트마스크로 대상/벽 판정. _pierce를 켜면 대상을 관통(벽에서만 사라짐)
+- HitEffect (싱글턴 Instance): 카메라 흔들림 + 히트스톱(TimeControl의 HitStop 플래그). 흔들림 끄기 설정이면 CameraFollowing.Shake()가 무시함
+- 부대장 스킬 (Enemy에 붙이는 컴포넌트, 쿨타임 + 선딜 후 발동, 스킬 중 Enemy.IsActing = true로 일반 행동 정지)
+  - LeaderDashSkill: 선딜 뒤 플레이어 쪽으로 돌진, 닿으면 피해 (근접 대장)
+  - LeaderSlashSkill: 선딜 뒤 정면 부채꼴 베기 + SlashArc 이펙트 (근접 대장). 돌진 스킬도 있으면 Awake에서 둘 중 하나만 랜덤으로 켜짐
+  - LeaderArrowSkill: 멈춰서 조준 후 거대 관통 화살(GiantArrow) 발사 (원거리 대장)
+  - SlashSkill, BloodSkill: 플레이어 스킬 (E, Q)
 - HitFlash: 맞으면 머티리얼 색을 잠깐 바꿈 (_BaseColor)
 
 ## 캐릭터 (Character)
 - Player: CharacterController 이동, 마우스 방향 회전, 대시(전투 중)/점프(비전투), 근접·원거리 공격, 체력과 보상 적용 메서드(AddMaxHealth, Heal, AddMoveSpeed, AddAttackDamage, MultiplyDashCooldown). InputLocked로 입력 잠금
-- Enemy (abstract): Update에서 넉백 → TryAttack() → Chase(). 사망 시 효과음 후 Destroy
+- Enemy (abstract): Update에서 넉백 → TryAttack() → Chase()(부대 소속이면 FollowSlot). IsActing이 true면 이 흐름을 건너뜀. Target으로 추적 대상을 읽음. 사망 시 효과음 후 Destroy
+- Squad: 근접·원거리 병사 대형 부대. 근접/원거리 중 랜덤 한 명이 부대장(MeleeLeader/RangedLeader 프리팹, 색이 다름)
   - MeleeEnemy: 추적 + 사거리 안이면 MeleeAttack
   - RangedEnemy: 거리 유지(가까우면 물러남) + RangedAttack
   - BossEnemy: 평소엔 근접 공격, 일정 시간마다 패턴(돌진 또는 범위공격) 코루틴. BossHealthBar 갱신
@@ -35,7 +48,8 @@
 ## UI
 - HealthBar: 플레이어 체력을 하트(Heart)로 표시, 하트 1칸 = 체력 2
 - BossHealthBar (싱글턴 Instance): 보스 체력바, Show/Hide
-- ClearUI: 클리어 화면 버튼
+- ClearUI: 클리어 화면 버튼 (Restart/GoTitle은 일시정지 메뉴에서도 재사용)
+- SettingsPanel (프리팹 SettingsPanel): 볼륨 슬라이더 3개, 전체화면·화면 흔들림 끄기 토글, 뒤로 버튼. Battle과 Title이 같은 프리팹을 씀. Open()/Close()/IsOpen
 
 ## Util
 - CameraFollowing: 플레이어 추적, 픽셀 스냅(RenderTexture + RawImage), Shake(), ScreenPointToRay()(플레이어 조준용)
@@ -46,7 +60,8 @@
 - Animator 파라미터: Speed, IsGround, IsDash, Attack, Throw, Die
 
 ## 주의할 점
-- Time.timeScale을 바꾸는 곳이 3군데: HitEffect(히트스톱), RewardManager(보상 선택 중 0), Player.DieRoutine. 서로 겹치면 멈춤이 풀리거나 안 풀리는 버그가 생길 수 있음
+- Time.timeScale은 직접 바꾸지 말고 TimeControl.Set(이유, 켬/끔)으로만 바꿀 것. 새 멈춤 이유가 필요하면 TimeStopReason에 추가
+- 전체화면 전환은 에디터 Game 뷰에서는 확인되지 않음 (빌드에서 확인)
 - 싱글턴: HitEffect.Instance, BossHealthBar.Instance (씬에 하나씩 있어야 함)
 - ViewCollider.cs 안의 클래스 이름이 ColliderGizmos라 파일 이름과 다름 (유니티에서 컴포넌트로 붙일 때 문제될 수 있음)
 - 게임 상태를 총괄하는 GameManager는 아직 없음
