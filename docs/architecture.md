@@ -45,7 +45,7 @@
 - Squad: 근접·원거리 병사 대형 부대. 근접/원거리 중 랜덤 한 명이 부대장(MeleeLeader/RangedLeader 프리팹, 색이 다름)
   - MeleeEnemy: 추적 + 사거리 안이면 MeleeAttack
   - RangedEnemy: 거리 유지(가까우면 물러남) + RangedAttack
-  - BossEnemy: 평소엔 근접 공격, 일정 시간마다 패턴(돌진 또는 범위공격) 코루틴. BossHealthBar 갱신
+  - BossEnemy: 평소엔 근접 공격, 일정 시간마다 패턴(돌진 또는 소환) 코루틴. BossHealthBar 갱신. 이펙트 칸: _windupEffect(패턴 시작 전 모이는 빛), _dashTrailEffect(돌진 중 보스를 따라다님), _dashImpactEffect(돌진이 닿은 위치), _summonEffect(졸개 소환 위치마다). 비우면 없음
 
 ## UI
 - HealthBar: 플레이어 체력을 하트(Heart)로 표시, 하트 1칸 = 체력 2

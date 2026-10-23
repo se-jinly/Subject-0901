@@ -440,6 +440,12 @@ MonoBehaviour:
   _summonRadius: 2.5
   _maxSummons: 8
   _summonWindupTime: 0.5
+  _windupEffect: {fileID: 4968998338563624912, guid: b02d0971d07e9ea41bff00bf31796d50, type: 3}
+  _dashTrailEffect: {fileID: 1517658459970240543, guid: a4046c843f42a334cb29d571fbe25f25, type: 3}
+  _dashImpactEffect: {fileID: 3481394112707726407, guid: 3042923493d0a79428ccc8aea0a8c35e, type: 3}
+  _summonEffect: {fileID: 965008364669202677, guid: fe509d8fcd1db444da3b40bb2db3d9ab, type: 3}
+  _effectHeight: 0.15
+  _effectLifetime: 2
 --- !u!1 &1031092735581688445
 GameObject:
   m_ObjectHideFlags: 0

@@ -13,6 +13,8 @@
 | 2026-10-22 | Assets/Prefab/HolySlash.prefab, HolyHit.prefab, EnemyArrow.prefab, Assets/Effects/EnemyArrow.mat, HolyArrow.mat (기존 SlashWhite.mat 재사용) | Claude Code | 적 근접 휘두름·타격, 적 화살(Arrow 변형 + 빛 꼬리) 이펙트를 은/흰색 + 옅은 금색으로 코드로 생성. 머티리얼도 코드로 생성 (외부 이미지 없음, 시험용) | - |
 | 2026-10-22 | Assets/Prefab/GiantArrow.prefab, SlashArc.prefab (기존 에셋 수정) | Claude Code | 거대 화살에 빛 꼬리·적중 이펙트·HolyArrow.mat 적용, 횡베기 SlashArc 색을 은/흰색 + 금색 파편으로 조정 | - |
 | 2026-10-22 | Assets/Prefab/HolyJudgment.prefab (기존 SlashWhite.mat 재사용) | Claude Code | 플레이어 사망 이펙트(빛기둥 + 바닥 인장 링 + 충격 링 + 떠오르는 빛 조각, 은/흰색 + 금색)를 코드로 생성 (외부 이미지 없음, 시험용) | - |
+| 2026-10-23 | Assets/Prefab/HolyWindup.prefab, HolyDashTrail.prefab, HolyDashImpact.prefab, HolySummon.prefab (기존 SlashWhite.mat 재사용) | Claude Code | 보스 돌진·소환 패턴 이펙트(모이는 빛, 돌진 꼬리, 충격, 소환 인장·빛기둥, 은/흰색 + 금색)를 코드로 생성 (외부 이미지 없음, 시험용) | - |
+| 2026-10-23 | Assets/Prefab/HolyHit.prefab (기존 에셋 수정), DeathMark.prefab (속도 모듈 축 방식 통일) | Claude Code | HolyHit을 BloodHit과 같은 쐐기 스타일로 다시 칠함. DeathMark Smoke의 Velocity 모듈 X, Y, Z 방식을 통일해 콘솔 경고 제거 | - |
 
 ## 외부 에셋 출처
 AI로 만든 것이 아닌 외부 에셋의 출처를 기록합니다.
