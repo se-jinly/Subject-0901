@@ -259,6 +259,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::HitFlash
   _duration: 0.1
   _hitColor: {r: 1, g: 0, b: 0, a: 1}
+  _warnColor: {r: 1, g: 0.95, b: 0.6, a: 1}
+  _blinkOnTime: 0.07
 --- !u!195 &6926563101602289831
 NavMeshAgent:
   m_ObjectHideFlags: 0
@@ -444,6 +446,7 @@ MonoBehaviour:
   _dashTrailEffect: {fileID: 1517658459970240543, guid: a4046c843f42a334cb29d571fbe25f25, type: 3}
   _dashImpactEffect: {fileID: 3481394112707726407, guid: 3042923493d0a79428ccc8aea0a8c35e, type: 3}
   _summonEffect: {fileID: 965008364669202677, guid: fe509d8fcd1db444da3b40bb2db3d9ab, type: 3}
+  _dashWarningEffect: {fileID: 362141573508771890, guid: 0e7f550b6b6f57d459e1815d6084432f, type: 3}
   _effectHeight: 0.15
   _effectLifetime: 2
 --- !u!1 &1031092735581688445

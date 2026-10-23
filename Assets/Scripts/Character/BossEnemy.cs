@@ -32,6 +32,7 @@ public class BossEnemy : Enemy
     [Tooltip("돌진하는 동안 보스를 따라다니며 꼬리를 남기는 이펙트"), SerializeField] private GameObject _dashTrailEffect;
     [Tooltip("돌진이 플레이어에게 닿는 위치에 나오는 이펙트"), SerializeField] private GameObject _dashImpactEffect;
     [Tooltip("졸개가 나타나는 위치마다 나오는 이펙트"), SerializeField] private GameObject _summonEffect;
+    [Tooltip("돌진 전 돌진할 길을 보여 주는 예고선 (길이는 돌진 속도 × 돌진 시간에 맞춰 만든 프리팹). 비워두면 없음"), SerializeField] private GameObject _dashWarningEffect;
     [Tooltip("바닥 이펙트가 나오는 월드 Y 높이 (바닥 위)"), SerializeField] private float _effectHeight = 0.15f;
     [Tooltip("이펙트가 사라지기까지 시간(초)"), SerializeField] private float _effectLifetime = 2f;
     private readonly List<Enemy> _minions = new();
@@ -40,12 +41,14 @@ public class BossEnemy : Enemy
 
 
     private MeleeAttack _meleeAttack;
+    private HitFlash _warnFlash;
 
     protected override void Awake()
     {
         base.Awake();
         _patternTimer = _patternInterval;
         _meleeAttack = GetComponent<MeleeAttack>();
+        _warnFlash = GetComponent<HitFlash>();
         BossHealthBar.Instance.SetHealth(_currentHp, _maxHp);
         BossHealthBar.Instance.Show();
     }
@@ -87,10 +90,16 @@ public class BossEnemy : Enemy
         SpawnEffect(_windupEffect, transform.position);
         if(randomPattern == 0)
         {
+            // 예고 시작 때 돌진 방향을 정함: 예고선과 실제 돌진 방향이 같고, 예고 동안 옆으로 피할 수 있음
+            Vector3 dashDir = DashDirection();
+            transform.rotation = Quaternion.LookRotation(dashDir);
+            SpawnEffect(_dashWarningEffect, transform.position, transform.rotation);
+            _warnFlash.Blink(_dashWindupTime);
             yield return new WaitForSeconds(_dashWindupTime);
-            yield return StartCoroutine(DashRoutine());
+            yield return StartCoroutine(DashRoutine(dashDir));
         } else
         {
+            _warnFlash.Blink(_summonWindupTime);
             yield return new WaitForSeconds(_summonWindupTime);
             yield return StartCoroutine(SummonRoutine());
         }
@@ -117,12 +126,16 @@ public class BossEnemy : Enemy
         yield return null;
     }
 
-    private IEnumerator DashRoutine()
+    private Vector3 DashDirection()
     {
         Vector3 dir = _player.position - transform.position;
         dir.y = 0;
-        dir.Normalize();
+        if (dir.sqrMagnitude < 0.001f) return transform.forward;
+        return dir.normalized;
+    }
 
+    private IEnumerator DashRoutine(Vector3 dir)
+    {
         bool canHit = true;
         float t = 0f;
         // 돌진하는 동안 보스를 따라다니는 꼬리 이펙트
@@ -153,11 +166,13 @@ public class BossEnemy : Enemy
         }
     }
 
-    private void SpawnEffect(GameObject prefab, Vector3 position)
+    private void SpawnEffect(GameObject prefab, Vector3 position) => SpawnEffect(prefab, position, Quaternion.identity);
+
+    private void SpawnEffect(GameObject prefab, Vector3 position, Quaternion rotation)
     {
         if (prefab == null) return;
         Vector3 pos = new Vector3(position.x, _effectHeight, position.z);
-        Destroy(Instantiate(prefab, pos, Quaternion.identity), _effectLifetime);
+        Destroy(Instantiate(prefab, pos, rotation), _effectLifetime);
     }
 
     protected override void Chase()

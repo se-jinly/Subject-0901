@@ -11,6 +11,10 @@ public class HitFlash : MonoBehaviour
     [SerializeField] private float _duration = 0.1f;
     [SerializeField] private Color _hitColor = Color.red;
 
+    [Header("예고 깜빡임")]
+    [Tooltip("공격 직전 번쩍이는 색"), SerializeField] private Color _warnColor = new Color(1f, 0.95f, 0.6f);
+    [Tooltip("한 번 번쩍이는 시간(초)"), SerializeField] private float _blinkOnTime = 0.04f;
+
     private readonly List<Material> _materials = new();
     private readonly List<Color> _originalColor = new();
     private Coroutine _flashRoutine;
@@ -36,6 +40,29 @@ public class HitFlash : MonoBehaviour
     {
         if (_flashRoutine != null) StopCoroutine(_flashRoutine);
         _flashRoutine = StartCoroutine(Flash());
+    }
+
+    // 공격 직전 예고: 선딜(totalTime) 동안 점점 빠르게 번쩍임. 중간에 맞으면 Play()가 끊고 원래 색으로 복구
+    public void Blink(float totalTime)
+    {
+        if (_flashRoutine != null) StopCoroutine(_flashRoutine);
+        for (int i = 0; i < _materials.Count; i++) _materials[i].SetColor(BaseColorId, _originalColor[i]);
+        _flashRoutine = StartCoroutine(BlinkRoutine(totalTime));
+    }
+
+    private IEnumerator BlinkRoutine(float totalTime)
+    {
+        float elapsed = 0f;
+        for (int i = 0; i < 4; i++)
+        {
+            // 0.35, 0.6, 0.75, 0.85 지점: 간격이 짧아져 마지막에 가장 빠름
+            float next = totalTime * (1f - 0.65f * Mathf.Pow(0.62f, i));
+            yield return new WaitForSeconds(Mathf.Max(0f, next - elapsed));
+            foreach (Material m in _materials) m.SetColor(BaseColorId, _warnColor);
+            yield return new WaitForSeconds(_blinkOnTime);
+            for (int j = 0; j < _materials.Count; j++) _materials[j].SetColor(BaseColorId, _originalColor[j]);
+            elapsed = next + _blinkOnTime;
+        }
     }
 
     private IEnumerator Flash()

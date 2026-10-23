@@ -27,6 +27,7 @@ public class LeaderSlashSkill : MonoBehaviour
     private Enemy _enemy;
     private NavMeshAgent _agent;
     private Animator _animator;
+    private HitFlash _hitFlash;
     private float _cooldownLeft;
 
     private void Awake()
@@ -34,6 +35,7 @@ public class LeaderSlashSkill : MonoBehaviour
         _enemy = GetComponent<Enemy>();
         _agent = GetComponent<NavMeshAgent>();
         _animator = GetComponentInChildren<Animator>();
+        _hitFlash = GetComponent<HitFlash>();
         _cooldownLeft = _cooldown;
         // 돌진 스킬도 있으면 둘 중 하나만 랜덤으로 사용 (꺼진 컴포넌트는 Update가 돌지 않음)
         if (TryGetComponent(out LeaderDashSkill dash))
@@ -57,6 +59,7 @@ public class LeaderSlashSkill : MonoBehaviour
         _enemy.IsActing = true;
         _agent.ResetPath();
         _animator.SetTrigger("Attack");
+        _hitFlash.Blink(_windupTime);
 
         float t = 0f;
         while (t < _windupTime)

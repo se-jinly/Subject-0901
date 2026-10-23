@@ -37,7 +37,7 @@
   - LeaderSlashSkill: 선딜 뒤 정면 부채꼴 베기 + SlashArc 이펙트 (근접 대장). 돌진 스킬도 있으면 Awake에서 둘 중 하나만 랜덤으로 켜짐
   - LeaderArrowSkill: 멈춰서 조준 후 거대 관통 화살(GiantArrow) 발사 (원거리 대장)
   - SlashSkill, BloodSkill: 플레이어 스킬 (E, Q)
-- HitFlash: 맞으면 머티리얼 색을 잠깐 바꿈 (_BaseColor)
+- HitFlash: 맞으면 머티리얼 색을 잠깐 바꿈 (_BaseColor). Blink(선딜 시간)은 공격 직전 예고로 몸을 점점 빠르게 번쩍임 (보스 패턴, 부대장 스킬 선딜에서 호출). 중간에 맞으면 Play()가 끊고 원래 색으로 복구
 
 ## 캐릭터 (Character)
 - Player: CharacterController 이동, 마우스 방향 회전, 대시(전투 중)/점프(비전투), 근접·원거리 공격, 체력과 보상 적용 메서드(AddMaxHealth, Heal, AddMoveSpeed, AddAttackDamage, MultiplyDashCooldown). InputLocked로 입력 잠금
@@ -45,7 +45,7 @@
 - Squad: 근접·원거리 병사 대형 부대. 근접/원거리 중 랜덤 한 명이 부대장(MeleeLeader/RangedLeader 프리팹, 색이 다름)
   - MeleeEnemy: 추적 + 사거리 안이면 MeleeAttack
   - RangedEnemy: 거리 유지(가까우면 물러남) + RangedAttack
-  - BossEnemy: 평소엔 근접 공격, 일정 시간마다 패턴(돌진 또는 소환) 코루틴. BossHealthBar 갱신. 이펙트 칸: _windupEffect(패턴 시작 전 모이는 빛), _dashTrailEffect(돌진 중 보스를 따라다님), _dashImpactEffect(돌진이 닿은 위치), _summonEffect(졸개 소환 위치마다). 비우면 없음
+  - BossEnemy: 평소엔 근접 공격, 일정 시간마다 패턴(돌진 또는 소환) 코루틴. BossHealthBar 갱신. 이펙트 칸: _windupEffect(패턴 시작 전 모이는 빛), _dashTrailEffect(돌진 중 보스를 따라다님), _dashImpactEffect(돌진이 닿은 위치), _summonEffect(졸개 소환 위치마다), _dashWarningEffect(돌진 길 예고선). 비우면 없음. 돌진 방향은 선딜(예고) 시작 때 확정되어 그 방향으로 돌진하고, 선딜 동안 HitFlash.Blink로 몸이 깜빡임
 
 ## UI
 - HealthBar: 플레이어 체력을 하트(Heart)로 표시, 하트 1칸 = 체력 2

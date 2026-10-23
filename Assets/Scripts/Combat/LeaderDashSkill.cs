@@ -18,12 +18,14 @@ public class LeaderDashSkill : MonoBehaviour
 
     private Enemy _enemy;
     private NavMeshAgent _agent;
+    private HitFlash _hitFlash;
     private float _cooldownLeft;
 
     private void Awake()
     {
         _enemy = GetComponent<Enemy>();
         _agent = GetComponent<NavMeshAgent>();
+        _hitFlash = GetComponent<HitFlash>();
         _cooldownLeft = _cooldown;
     }
 
@@ -39,6 +41,7 @@ public class LeaderDashSkill : MonoBehaviour
     {
         _enemy.IsActing = true;
         _agent.ResetPath();
+        _hitFlash.Blink(_windupTime);
 
         float t = 0f;
         while (t < _windupTime)
