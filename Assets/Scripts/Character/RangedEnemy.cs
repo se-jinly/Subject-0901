@@ -5,7 +5,7 @@ using UnityEngine;
 public class RangedEnemy : Enemy
 {
     private RangedAttack _rangedAttack;
-    private HitFlash _hitFlash;
+    private HitFlash _warnFlash;
     private bool _isWindingUp;
 
     [Header("공격 예고")]
@@ -25,7 +25,7 @@ public class RangedEnemy : Enemy
     {
         base.Awake();
         _rangedAttack = GetComponent<RangedAttack>();
-        _hitFlash = GetComponent<HitFlash>();
+        _warnFlash = GetComponent<HitFlash>();
         _agent.updateRotation = false;
     }
     protected override void TryAttack()
@@ -50,7 +50,7 @@ public class RangedEnemy : Enemy
     private IEnumerator VolleyRoutine()
     {
         _isWindingUp = true;
-        _hitFlash.Blink(_windupTime);
+        _warnFlash.Blink(_windupTime);
         GameObject aim = null;
         if (_aimEffect != null)
             aim = Instantiate(_aimEffect, new Vector3(transform.position.x, _effectHeight, transform.position.z), transform.rotation, transform);

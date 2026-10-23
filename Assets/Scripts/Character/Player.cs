@@ -80,6 +80,12 @@ public class Player : MonoBehaviour, IDamageable
     private float _attackAnimSpeed = 1f;
     private float _attackReadyTime;
 
+    [Header("공격 콤보")]
+    [Tooltip("공격 순서별 애니메이션 상태 이름: 횡베기 → 역방향 횡베기 → 대각베기 (이 순서로 계속 반복). 새 애니메이션을 만들면 이름만 바꾸면 됨"), SerializeField] private string[] _attackStates = { "Attack", "Attack", "Attack" };
+    private const int ComboCount = 3;
+    private int _comboIndex;
+    private bool _hasAttackIndexParam;
+
     private MeleeAttack _meleeAttack;
     private RangedAttack _rangedAttack;
     private InputAction _attackAction;
@@ -126,6 +132,11 @@ public class Player : MonoBehaviour, IDamageable
         _hitFlash = GetComponent<HitFlash>();
         _healthBar.SetHealth(_currentHp, _maxHp);
         _animator = GetComponentInChildren<Animator>();
+        // 애니메이터에 AttackIndex(정수) 파라미터가 있을 때만 콤보 번호를 넘김 (없으면 경고 없이 건너뜀)
+        foreach (AnimatorControllerParameter param in _animator.parameters)
+        {
+            if (param.name == "AttackIndex") _hasAttackIndexParam = true;
+        }
         // 공격 쿨다운 안에 애니메이션이 끝나도록 재생 속도를 맞춤
         _attackAnimSpeed = (_attackEndTime - _attackStartTime) / Mathf.Max(0.05f, _meleeAttack.Cooldown);
         _animator.SetFloat("AttackSpeed", _attackAnimSpeed);
@@ -247,18 +258,23 @@ public class Player : MonoBehaviour, IDamageable
         if (!_attackAction.WasPressedThisFrame()) return;
         if (Time.time < _attackReadyTime) return;
         _attackReadyTime = Time.time + _meleeAttack.Cooldown;
+        // 횡베기 → 역방향 횡베기 → 대각베기 순서로 계속 반복
+        int combo = _comboIndex;
+        _comboIndex = (_comboIndex + 1) % ComboCount;
+        if (_hasAttackIndexParam) _animator.SetInteger("AttackIndex", combo);
+        string state = combo < _attackStates.Length ? _attackStates[combo] : "Attack";
         // 준비 동작을 건너뛰고 휘두르기 직전 시점부터 바로 재생
         // (고정 시간 오프셋은 배속이 적용된 상태 시간 기준이라 재생 속도로 나눠야 클립의 해당 시점이 됨)
-        _animator.CrossFadeInFixedTime("Attack", 0.03f, 0, _attackStartTime / _attackAnimSpeed);
-        StartCoroutine(AttackHitRoutine());
+        _animator.CrossFadeInFixedTime(state, 0.03f, 0, _attackStartTime / _attackAnimSpeed);
+        StartCoroutine(AttackHitRoutine(combo));
     }
 
     // 클릭 즉시가 아니라 애니메이션에서 칼이 휘둘러지기 시작하는 시점에 피해를 줌
-    private IEnumerator AttackHitRoutine()
+    private IEnumerator AttackHitRoutine(int combo)
     {
         yield return new WaitForSeconds((_attackHitTime - _attackStartTime) / _attackAnimSpeed);
         if (_isDead) yield break;
-        _meleeAttack.Execute(true);
+        _meleeAttack.Execute(true, combo);
     }
 
     private void TryMobility()

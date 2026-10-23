@@ -6909,6 +6909,10 @@ MonoBehaviour:
   _attackStartTime: 0.5
   _attackEndTime: 1.2
   _attackHitTime: 0.75
+  _attackStates:
+  - Attack
+  - Attack
+  - Attack
   _deathEffectPrefab: {fileID: 5780675320438151714, guid: 70e5be8f5c25b1a4487aa3b3904a8a5c, type: 3}
   _deathEffectHeight: 0.15
   _deathEffectLifetime: 3
@@ -6939,6 +6943,10 @@ MonoBehaviour:
     _hitStopDuration: 0.04
     _maxMultiplier: 3
   _swingEffectPrefab: {fileID: 6782806111717306292, guid: 643593e569b77fc48a2277082e598c37, type: 3}
+  _comboSwingEffects:
+  - {fileID: 6782806111717306292, guid: 643593e569b77fc48a2277082e598c37, type: 3}
+  - {fileID: 3687440576569386680, guid: 414b217ed31dd1b498ae705e5af74c1d, type: 3}
+  - {fileID: 6076495717663941109, guid: eb60a7cdabaa94940b5e5f68852f4aa5, type: 3}
   _hitEffectPrefab: {fileID: 8139677448389645296, guid: 4bb153066741f214eb0719bf8294e3d3, type: 3}
   _effectHeight: 1
   _effectLifetime: 1
@@ -6957,6 +6965,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::HitFlash
   _duration: 0.1
   _hitColor: {r: 1, g: 0, b: 0, a: 1}
+  _warnColor: {r: 1, g: 0.95, b: 0.6, a: 1}
+  _blinkOnTime: 0.04
 --- !u!114 &6024616223342826572
 MonoBehaviour:
   m_ObjectHideFlags: 0

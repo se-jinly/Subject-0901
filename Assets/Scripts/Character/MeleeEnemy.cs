@@ -4,7 +4,7 @@ using UnityEngine;
 public class MeleeEnemy : Enemy
 {
     private MeleeAttack _meleeAttack;
-    private HitFlash _hitFlash;
+    private HitFlash _warnFlash;
     private bool _isWindingUp;
 
     [Header("공격 예고")]
@@ -22,7 +22,7 @@ public class MeleeEnemy : Enemy
     {
         base.Awake();
         _meleeAttack = GetComponent<MeleeAttack>();
-        _hitFlash = GetComponent<HitFlash>();
+        _warnFlash = GetComponent<HitFlash>();
     }
 
     protected override void TryAttack()
@@ -43,7 +43,7 @@ public class MeleeEnemy : Enemy
     {
         _isWindingUp = true;
         IsActing = true;
-        _hitFlash.Blink(_windupTime);
+        _warnFlash.Blink(_windupTime);
         if (_windupEffect != null)
         {
             Vector3 center = _meleeAttack.AttackCenter;

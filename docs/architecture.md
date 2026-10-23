@@ -41,6 +41,7 @@
 - HitFlash: 맞으면 머티리얼 색을 잠깐 바꿈 (_BaseColor). Blink(선딜 시간)은 공격 직전 예고로 몸을 점점 빠르게 번쩍임 (보스 패턴, 부대장 스킬 선딜에서 호출). 중간에 맞으면 Play()가 끊고 원래 색으로 복구
 
 ## 캐릭터 (Character)
+- Player 공격 콤보: 공격할 때마다 콤보 번호가 0 → 1 → 2 → 0으로 계속 돔 (횡베기 → 역방향 횡베기 → 대각베기). _attackStates(번호별 애니메이션 상태 이름, 지금은 모두 "Attack")를 CrossFade하고, 애니메이터에 AttackIndex(정수) 파라미터가 있으면 번호를 넘김. 히트 때 MeleeAttack.Execute(true, 번호)가 _comboSwingEffects[번호]의 이펙트를 생성 (BloodSlash, BloodSlashReverse, BloodSlashDiagonal). 새 애니메이션은 상태 이름만 바꿔 연결
 - Player: CharacterController 이동, 마우스 방향 회전, 대시(전투 중)/점프(비전투), 근접·원거리 공격, 체력과 보상 적용 메서드(AddMaxHealth, Heal, AddMoveSpeed, AddAttackDamage, MultiplyDashCooldown). InputLocked로 입력 잠금
 - Enemy (abstract): Update에서 넉백 → TryAttack() → Chase()(부대 소속이면 FollowSlot). IsActing이 true면 이 흐름을 건너뜀. Target으로 추적 대상을 읽음. 사망 시 효과음 후 Destroy
 - Squad: 근접·원거리 병사 대형 부대. 근접/원거리 중 랜덤 한 명이 부대장(MeleeLeader/RangedLeader 프리팹, 색이 다름)
