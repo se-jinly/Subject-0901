@@ -529,6 +529,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::HitFlash
   _duration: 0.1
   _hitColor: {r: 1, g: 0, b: 0, a: 1}
+  _warnColor: {r: 1, g: 0.95, b: 0.6, a: 1}
+  _blinkOnTime: 0.04
 --- !u!195 &4969089037733665190
 NavMeshAgent:
   m_ObjectHideFlags: 0
@@ -574,6 +576,9 @@ MonoBehaviour:
   _deathEffectPrefab: {fileID: 9032424163117913864, guid: 65b4ef75aae1a7b4db1d030a2447843b, type: 3}
   _deathEffectLifetime: 2
   _dieClip: {fileID: 8300000, guid: b21cf6f581b114249934ab9233834ff4, type: 3}
+  _windupTime: 0.1
+  _windupEffect: {fileID: 5769372628702522940, guid: 183f16e2e4aeffb43aac1fd95192778e, type: 3}
+  _effectHeight: 0.15
   _leashDistance: 2
   _engageRange: 5
   _rotateSpeed: 360
@@ -721,6 +726,8 @@ MonoBehaviour:
   _dashDuration: 0.5
   _hitRange: 2
   _rotateSpeed: 360
+  _warningEffect: {fileID: 333030610114341255, guid: 67816a66374ca3146896844cd0d2a04e, type: 3}
+  _warningHeight: 0.15
 --- !u!114 &6168327853117842953
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -744,6 +751,7 @@ MonoBehaviour:
   _knockback: 3
   _windupTime: 0.5
   _rotateSpeed: 360
+  _warningEffect: {fileID: 4329749491372292471, guid: dd57653cfdb37cb43ac124f4c7ede95c, type: 3}
   _effectPrefab: {fileID: 8267335577232723036, guid: 98e14e46aa8e5174eadae5105d2333df, type: 3}
   _effectBaseRange: 4.5
   _effectHeight: 0.15

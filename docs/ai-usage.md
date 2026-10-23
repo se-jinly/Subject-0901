@@ -16,6 +16,7 @@
 | 2026-10-23 | Assets/Prefab/HolyWindup.prefab, HolyDashTrail.prefab, HolyDashImpact.prefab, HolySummon.prefab (기존 SlashWhite.mat 재사용) | Claude Code | 보스 돌진·소환 패턴 이펙트(모이는 빛, 돌진 꼬리, 충격, 소환 인장·빛기둥, 은/흰색 + 금색)를 코드로 생성 (외부 이미지 없음, 시험용) | - |
 | 2026-10-23 | Assets/Prefab/HolyHit.prefab (기존 에셋 수정), DeathMark.prefab (속도 모듈 축 방식 통일) | Claude Code | HolyHit을 BloodHit과 같은 쐐기 스타일로 다시 칠함. DeathMark Smoke의 Velocity 모듈 X, Y, Z 방식을 통일해 콘솔 경고 제거 | - |
 | 2026-10-23 | Assets/Prefab/HolyDashWarning.prefab (기존 SlashWhite.mat 재사용) | Claude Code | 보스 돌진 예고선(양쪽 가장자리 선, 진행 방향 화살표, 옅은 면, 도착 링, 깜빡임 펄스)을 코드로 생성 (외부 이미지 없음, 시험용) | - |
+| 2026-10-23 | Assets/Prefab/HolyMeleeWarning.prefab, HolySlashWarning.prefab, HolyAimLine.prefab, HolyLeaderDashWarning.prefab (기존 SlashWhite.mat 재사용) | Claude Code | 근접 잡몹 공격 범위, 부대장 횡베기 부채꼴, 원거리 조준선, 부대장 돌진 길 예고선(은/흰색 + 금색)을 코드로 생성 (외부 이미지 없음, 시험용) | - |
 
 ## 외부 에셋 출처
 AI로 만든 것이 아닌 외부 에셋의 출처를 기록합니다.

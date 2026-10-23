@@ -18,6 +18,10 @@ public class LeaderArrowSkill : MonoBehaviour
     [SerializeField] private float _spawnOffset = 1.5f;
     [SerializeField] private float _spawnHeight = 1f;
 
+    [Header("연출")]
+    [Tooltip("선딜 동안 발사 방향을 보여 주는 조준선. 비워두면 없음"), SerializeField] private GameObject _warningEffect;
+    [Tooltip("조준선이 나오는 월드 Y 높이 (바닥 위)"), SerializeField] private float _warningHeight = 0.15f;
+
     private Enemy _enemy;
     private NavMeshAgent _agent;
     private HitFlash _hitFlash;
@@ -44,6 +48,10 @@ public class LeaderArrowSkill : MonoBehaviour
         _enemy.IsActing = true;
         _agent.ResetPath();
         _hitFlash.Blink(_windupTime);
+        // 조준선은 몸에 붙어 플레이어를 조준하는 방향으로 같이 돎
+        GameObject warning = _warningEffect != null
+            ? Instantiate(_warningEffect, new Vector3(transform.position.x, _warningHeight, transform.position.z), transform.rotation, transform)
+            : null;
 
         float t = 0f;
         while (t < _windupTime)
@@ -52,6 +60,7 @@ public class LeaderArrowSkill : MonoBehaviour
             FacePlayer();
             yield return null;
         }
+        if (warning != null) Destroy(warning);
 
         Vector3 spawnPos = transform.position + transform.forward * _spawnOffset + Vector3.up * _spawnHeight;
         Projectile arrow = Instantiate(_arrowPrefab, spawnPos, transform.rotation);

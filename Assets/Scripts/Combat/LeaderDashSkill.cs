@@ -14,7 +14,11 @@ public class LeaderDashSkill : MonoBehaviour
     [SerializeField] private float _dashSpeed = 12f;
     [SerializeField] private float _dashDuration = 0.5f;
     [Tooltip("돌진 중 플레이어가 이 거리 안이면 피해"), SerializeField] private float _hitRange = 2f;
-    [Tooltip("선딜 중 플레이어를 바라보는 회전 속도"), SerializeField] private float _rotateSpeed = 360f;
+    [Tooltip("선딜 중 돌진 방향을 바라보는 회전 속도"), SerializeField] private float _rotateSpeed = 360f;
+
+    [Header("연출")]
+    [Tooltip("선딜 동안 돌진할 길을 보여 주는 바닥 예고선 (길이는 돌진 속도 × 돌진 시간에 맞춰 만든 프리팹). 비워두면 없음"), SerializeField] private GameObject _warningEffect;
+    [Tooltip("예고선이 나오는 월드 Y 높이 (바닥 위)"), SerializeField] private float _warningHeight = 0.15f;
 
     private Enemy _enemy;
     private NavMeshAgent _agent;
@@ -43,17 +47,22 @@ public class LeaderDashSkill : MonoBehaviour
         _agent.ResetPath();
         _hitFlash.Blink(_windupTime);
 
+        // 예고 시작 때 돌진 방향을 정함: 예고선과 실제 돌진 방향이 같고, 예고 동안 옆으로 피할 수 있음
+        Vector3 dir = _enemy.Target.position - transform.position;
+        dir.y = 0f;
+        dir = dir.sqrMagnitude < 0.001f ? transform.forward : dir.normalized;
+        GameObject warning = _warningEffect != null
+            ? Instantiate(_warningEffect, new Vector3(transform.position.x, _warningHeight, transform.position.z), Quaternion.LookRotation(dir))
+            : null;
+
         float t = 0f;
         while (t < _windupTime)
         {
             t += Time.deltaTime;
-            FacePlayer();
+            FaceDirection(dir);
             yield return null;
         }
-
-        Vector3 dir = _enemy.Target.position - transform.position;
-        dir.y = 0f;
-        dir.Normalize();
+        if (warning != null) Destroy(warning);
 
         bool canHit = true;
         t = 0f;
@@ -74,11 +83,8 @@ public class LeaderDashSkill : MonoBehaviour
         _enemy.IsActing = false;
     }
 
-    private void FacePlayer()
+    private void FaceDirection(Vector3 dir)
     {
-        Vector3 dir = _enemy.Target.position - transform.position;
-        dir.y = 0f;
-        if (dir.sqrMagnitude < 0.001f) return;
         transform.rotation = Quaternion.RotateTowards(transform.rotation, Quaternion.LookRotation(dir), _rotateSpeed * Time.deltaTime);
     }
 }

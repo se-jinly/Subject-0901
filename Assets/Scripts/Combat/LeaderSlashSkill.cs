@@ -19,6 +19,7 @@ public class LeaderSlashSkill : MonoBehaviour
     [Tooltip("선딜 중 플레이어를 바라보는 회전 속도"), SerializeField] private float _rotateSpeed = 360f;
 
     [Header("연출")]
+    [Tooltip("선딜 동안 베는 범위(부채꼴)를 보여 주는 바닥 예고선. 비워두면 없음"), SerializeField] private GameObject _warningEffect;
     [SerializeField] private GameObject _effectPrefab;
     [Tooltip("이펙트가 원래 맞춰진 반경 (범위에 맞춰 이펙트 크기를 조절)"), SerializeField] private float _effectBaseRange = 4.5f;
     [Tooltip("이펙트가 나오는 월드 Y 높이 (바닥 위)"), SerializeField] private float _effectHeight = 0.15f;
@@ -60,6 +61,10 @@ public class LeaderSlashSkill : MonoBehaviour
         _agent.ResetPath();
         _animator.SetTrigger("Attack");
         _hitFlash.Blink(_windupTime);
+        // 예고선은 몸에 붙어 플레이어를 바라보는 방향으로 같이 돎
+        GameObject warning = _warningEffect != null
+            ? Instantiate(_warningEffect, new Vector3(transform.position.x, _effectHeight, transform.position.z), transform.rotation, transform)
+            : null;
 
         float t = 0f;
         while (t < _windupTime)
@@ -68,6 +73,7 @@ public class LeaderSlashSkill : MonoBehaviour
             FacePlayer();
             yield return null;
         }
+        if (warning != null) Destroy(warning);
 
         Vector3 forward = transform.forward;
         forward.y = 0f;

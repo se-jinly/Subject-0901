@@ -33,6 +33,9 @@ public class MeleeAttack : MonoBehaviour
     }
 
     public float Cooldown => _attackCooldown;
+    // 선딜(예고)을 넣는 호출자용: 쿨타임이 끝났는지, 공격 범위 중심이 어디인지
+    public bool IsReady => _attackCooldownLeft <= 0f;
+    public Vector3 AttackCenter => transform.position + _attackOffsetRatio * _attackRange * transform.forward;
 
     // ignoreCooldown: 호출하는 쪽(플레이어)이 공격 간격을 직접 관리할 때 사용
     public void Execute(bool ignoreCooldown = false)

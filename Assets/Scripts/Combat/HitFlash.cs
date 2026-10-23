@@ -57,6 +57,8 @@ public class HitFlash : MonoBehaviour
         {
             // 0.35, 0.6, 0.75, 0.85 지점: 간격이 짧아져 마지막에 가장 빠름
             float next = totalTime * (1f - 0.65f * Mathf.Pow(0.62f, i));
+            // 선딜이 짧으면 들어가지 않는 깜빡임은 생략 (선딜이 끝난 뒤까지 번쩍이지 않도록)
+            if (next + _blinkOnTime > totalTime + 0.02f) break;
             yield return new WaitForSeconds(Mathf.Max(0f, next - elapsed));
             foreach (Material m in _materials) m.SetColor(BaseColorId, _warnColor);
             yield return new WaitForSeconds(_blinkOnTime);

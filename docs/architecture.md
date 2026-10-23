@@ -33,9 +33,10 @@
 - 이펙트 색 방향: 플레이어 이펙트(BloodSlash, BloodHit, BloodSlashArc, BloodBurst, BloodWave)는 핏빛/악마적, 적 이펙트(HolySlash, HolyHit, EnemyArrow, GiantArrow, SlashArc)는 은/흰색 + 옅은 금색. 적 사망(DeathMark)은 플레이어 쪽 느낌이라 검붉은 색 유지
 - HitEffect (싱글턴 Instance): 카메라 흔들림 + 히트스톱(TimeControl의 HitStop 플래그). 흔들림 끄기 설정이면 CameraFollowing.Shake()가 무시함
 - 부대장 스킬 (Enemy에 붙이는 컴포넌트, 쿨타임 + 선딜 후 발동, 스킬 중 Enemy.IsActing = true로 일반 행동 정지)
-  - LeaderDashSkill: 선딜 뒤 플레이어 쪽으로 돌진, 닿으면 피해 (근접 대장)
-  - LeaderSlashSkill: 선딜 뒤 정면 부채꼴 베기 + SlashArc 이펙트 (근접 대장). 돌진 스킬도 있으면 Awake에서 둘 중 하나만 랜덤으로 켜짐
-  - LeaderArrowSkill: 멈춰서 조준 후 거대 관통 화살(GiantArrow) 발사 (원거리 대장)
+  - LeaderDashSkill: 선딜 뒤 플레이어 쪽으로 돌진, 닿으면 피해 (근접 대장). 돌진 방향은 선딜 시작 때 확정, 선딜 동안 돌진 길 예고선(_warningEffect)
+  - LeaderSlashSkill: 선딜 뒤 정면 부채꼴 베기 + SlashArc 이펙트 (근접 대장). 선딜 동안 부채꼴 예고선(몸에 붙어 같이 돎). 돌진 스킬도 있으면 Awake에서 둘 중 하나만 랜덤으로 켜짐
+  - LeaderArrowSkill: 멈춰서 조준 후 거대 관통 화살(GiantArrow) 발사 (원거리 대장). 선딜 동안 조준선(몸에 붙어 같이 돎)
+  - 모든 부대장 스킬 선딜은 HitFlash.Blink로 몸이 깜빡임
   - SlashSkill, BloodSkill: 플레이어 스킬 (E, Q)
 - HitFlash: 맞으면 머티리얼 색을 잠깐 바꿈 (_BaseColor). Blink(선딜 시간)은 공격 직전 예고로 몸을 점점 빠르게 번쩍임 (보스 패턴, 부대장 스킬 선딜에서 호출). 중간에 맞으면 Play()가 끊고 원래 색으로 복구
 
@@ -43,8 +44,8 @@
 - Player: CharacterController 이동, 마우스 방향 회전, 대시(전투 중)/점프(비전투), 근접·원거리 공격, 체력과 보상 적용 메서드(AddMaxHealth, Heal, AddMoveSpeed, AddAttackDamage, MultiplyDashCooldown). InputLocked로 입력 잠금
 - Enemy (abstract): Update에서 넉백 → TryAttack() → Chase()(부대 소속이면 FollowSlot). IsActing이 true면 이 흐름을 건너뜀. Target으로 추적 대상을 읽음. 사망 시 효과음 후 Destroy
 - Squad: 근접·원거리 병사 대형 부대. 근접/원거리 중 랜덤 한 명이 부대장(MeleeLeader/RangedLeader 프리팹, 색이 다름)
-  - MeleeEnemy: 추적 + 사거리 안이면 MeleeAttack
-  - RangedEnemy: 거리 유지(가까우면 물러남) + RangedAttack
+  - MeleeEnemy: 추적 + 사거리 안이면 MeleeAttack. _windupTime(기본 0.1초) 동안 멈춰서 HitFlash.Blink + 공격 범위 예고(_windupEffect) 뒤에 공격. 0이면 즉시 공격. MeleeAttack.IsReady/AttackCenter 사용
+  - RangedEnemy: 거리 유지(가까우면 물러남) + RangedAttack. 부대 일제 사격(FireVolley)은 _windupTime(0.4초) 동안 번쩍이며 조준선(_aimEffect)을 보여 준 뒤 발사. 연사하는 부대장은 _windupTime 0
   - BossEnemy: 평소엔 근접 공격, 일정 시간마다 패턴(돌진 또는 소환) 코루틴. BossHealthBar 갱신. 이펙트 칸: _windupEffect(패턴 시작 전 모이는 빛), _dashTrailEffect(돌진 중 보스를 따라다님), _dashImpactEffect(돌진이 닿은 위치), _summonEffect(졸개 소환 위치마다), _dashWarningEffect(돌진 길 예고선). 비우면 없음. 돌진 방향은 선딜(예고) 시작 때 확정되어 그 방향으로 돌진하고, 선딜 동안 HitFlash.Blink로 몸이 깜빡임
 
 ## UI

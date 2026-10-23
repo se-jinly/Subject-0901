@@ -1,9 +1,17 @@
+using System.Collections;
 using UnityEngine;
 
 [RequireComponent(typeof(RangedAttack))]
 public class RangedEnemy : Enemy
 {
     private RangedAttack _rangedAttack;
+    private HitFlash _hitFlash;
+    private bool _isWindingUp;
+
+    [Header("공격 예고")]
+    [Tooltip("일제 사격 신호를 받은 뒤 번쩍이며 조준하는 선딜(초). 0이면 즉시 발사 (연사하는 부대장은 0)"), SerializeField] private float _windupTime = 0.4f;
+    [Tooltip("선딜 동안 발사 방향을 보여 주는 조준선. 비워두면 없음"), SerializeField] private GameObject _aimEffect;
+    [Tooltip("조준선이 나오는 월드 Y 높이 (바닥 위)"), SerializeField] private float _effectHeight = 0.15f;
 
     [Header("사거리 유지")]
     [SerializeField] protected float _keepDistance = 5f;
@@ -17,6 +25,7 @@ public class RangedEnemy : Enemy
     {
         base.Awake();
         _rangedAttack = GetComponent<RangedAttack>();
+        _hitFlash = GetComponent<HitFlash>();
         _agent.updateRotation = false;
     }
     protected override void TryAttack()
@@ -27,7 +36,29 @@ public class RangedEnemy : Enemy
         _rangedAttack.Execute();
     }
     // 부대 신호에 맞춰 발사
-    public void FireVolley() => _rangedAttack.Execute();
+    public void FireVolley()
+    {
+        if (_windupTime <= 0f)
+        {
+            _rangedAttack.Execute();
+            return;
+        }
+        if (!_isWindingUp) StartCoroutine(VolleyRoutine());
+    }
+
+    // 신호를 받으면 번쩍이며 조준선을 보여 준 뒤 발사 (조준선은 몸과 함께 플레이어 쪽으로 돎)
+    private IEnumerator VolleyRoutine()
+    {
+        _isWindingUp = true;
+        _hitFlash.Blink(_windupTime);
+        GameObject aim = null;
+        if (_aimEffect != null)
+            aim = Instantiate(_aimEffect, new Vector3(transform.position.x, _effectHeight, transform.position.z), transform.rotation, transform);
+        yield return new WaitForSeconds(_windupTime);
+        if (aim != null) Destroy(aim);
+        _rangedAttack.Execute();
+        _isWindingUp = false;
+    }
 
     protected override void FollowSlot()
     {
